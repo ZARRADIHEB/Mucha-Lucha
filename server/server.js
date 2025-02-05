@@ -3,6 +3,9 @@ import connectDB from "./config/connectDB.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRouter from "./routes/auth/auth-routes.js";
+import dotenv from "dotenv";
+dotenv.config();
+import adminProductsRouter from "./routes/admin/products-routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,6 +28,7 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api/auth", authRouter);
+app.use("/api/admin/products", adminProductsRouter);
 
 app.listen(PORT, async () => {
   try {

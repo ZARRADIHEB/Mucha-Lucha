@@ -15,13 +15,23 @@ import ShoppingCheckout from "./pages/shopping-view/checkout";
 import ShoppingAccount from "./pages/shopping-view/account";
 import CheckAuth from "./components/common/check-auth";
 import UnauthPage from "./pages/unauth-page";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { checkAuth } from "./store/auth-slice";
+import Loader from "./components/common/Loading";
 
 function App() {
-  const isAuthenticated = false;
-  const user = {
-    name: "iZ17",
-    role: "user",
-  };
+  const { user, isAuthenticated, isLoading } = useSelector(
+    (state) => state.auth
+  );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, [dispatch]);
+
+  if (isLoading) return <Loader />;
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>

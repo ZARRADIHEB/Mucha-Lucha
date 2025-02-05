@@ -1,6 +1,9 @@
 import CommonForm from "@/components/common/form";
 import { loginFormControls } from "@/config";
+import { toast } from "@/hooks/use-toast";
+import { loginUser } from "@/store/auth-slice";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 const initialState = {
@@ -10,8 +13,26 @@ const initialState = {
 
 const AuthLogin = () => {
   const [formData, setFormData] = useState(initialState);
+  const dispatch = useDispatch();
 
-  const onSubmit = () => {};
+  const onSubmit = (e) => {
+    e.preventDefault();
+
+    dispatch(loginUser(formData)).then((data) => {
+      console.log(data);
+      if (data?.payload?.success) {
+        toast({
+          title: data?.payload?.message,
+          className: "bg-green-500 text-white",
+        });
+      } else {
+        toast({
+          title: data.payload?.message || "An error has occurred",
+          variant: "destructive",
+        });
+      }
+    });
+  };
 
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
