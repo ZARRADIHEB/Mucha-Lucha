@@ -57,7 +57,7 @@ const UserCartItemsContent = ({ cartItem }) => {
           <Button
             variant="outline"
             size="icon"
-            className="size-8 rounded-full "
+            className="size-6 sm:size-8 rounded-full "
             onClick={() => handleUpdateQuantity(cartItem, "minus")}
             disabled={
               cartItem?.quantity === 1 || cartItem?.productId?.quantity === 1
@@ -72,7 +72,7 @@ const UserCartItemsContent = ({ cartItem }) => {
           <Button
             variant="outline"
             size="icon"
-            className="size-8 rounded-full "
+            className="size-6 sm:size-8  rounded-full "
             onClick={() => handleUpdateQuantity(cartItem, "plus")}
           >
             <Plus className="size-4" />
