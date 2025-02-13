@@ -15,6 +15,7 @@ const types = {
   INPUT: "input",
   SELECT: "select",
   TEXTAREA: "textarea",
+  isBtnDisabled: PropTypes.bool,
 };
 
 const CommonForm = ({
@@ -23,6 +24,7 @@ const CommonForm = ({
   setFormData,
   onSubmit,
   buttonText,
+  isBtnDisabled,
 }) => {
   const renderInputsByComponentType = (getControlItem) => {
     let element = null;
@@ -123,11 +125,14 @@ const CommonForm = ({
           </div>
         ))}
       </div>
-      <Button className="mt-2 w-full">{buttonText || "Submit"}</Button>
+      <Button disabled={isBtnDisabled} className="mt-2 w-full">
+        {buttonText || "Submit"}
+      </Button>
     </form>
   );
 };
 CommonForm.propTypes = {
+  isBtnDisabled: PropTypes.bool,
   formControls: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,

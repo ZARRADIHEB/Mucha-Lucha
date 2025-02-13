@@ -66,7 +66,6 @@ const register = async (req, res) => {
 };
 
 //login
-
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -105,6 +104,7 @@ const login = async (req, res) => {
         id: existUser._id,
         role: existUser.role,
         email: existUser.email,
+        userName: existUser.userName,
       },
       process.env.SECRET_KEY,
       { expiresIn: "60m" }
@@ -123,6 +123,7 @@ const login = async (req, res) => {
         email: existUser.email,
         role: existUser.role,
         id: existUser._id,
+        userName: existUser.userName,
       },
     });
   } catch (error) {
@@ -135,7 +136,6 @@ const login = async (req, res) => {
 };
 
 //logout
-
 const logout = (req, res) => {
   try {
     res.clearCookie("token", {
@@ -158,7 +158,6 @@ const logout = (req, res) => {
 };
 
 //auth middleware
-
 const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
 

@@ -1,5 +1,5 @@
 import { imageUploadUtil } from "../../helpers/cloudinary.js";
-import ProductModel from "../../models/product.js";
+import ProductModel from "../../models/Product.js";
 
 const handleImageUpload = async (req, res) => {
   try {
@@ -98,7 +98,7 @@ const editProduct = async (req, res) => {
       totalStock,
     } = req.body;
 
-    const updateProduct = await ProductModel.findById(id);
+    let updateProduct = await ProductModel.findById(id);
 
     if (!updateProduct)
       return res.status(404).json({
@@ -111,8 +111,8 @@ const editProduct = async (req, res) => {
     updateProduct.description = description || updateProduct.description;
     updateProduct.category = category || updateProduct.category;
     updateProduct.brand = brand || updateProduct.brand;
-    updateProduct.price = price || updateProduct.price;
-    updateProduct.salePrice = salePrice || updateProduct.salePrice;
+    updateProduct.price = price === "" ? 0 : price;
+    updateProduct.salePrice = salePrice === "" ? 0 : salePrice;
     updateProduct.totalStock = totalStock || updateProduct.totalStock;
 
     await updateProduct.save();
@@ -120,6 +120,7 @@ const editProduct = async (req, res) => {
     res.status(200).json({
       message: "Product updated successfully!",
       success: true,
+      data: updateProduct,
     });
   } catch (error) {
     console.error("Edit product error:", error.message || error);
@@ -135,7 +136,7 @@ const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const product = await ProductModel.findById(id);
+    const product = await ProductModel.findByIdAndDelete(id);
 
     if (!product)
       return res.status(404).json({

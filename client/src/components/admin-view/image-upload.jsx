@@ -46,7 +46,7 @@ const ProductImageUpload = ({
       const data = new FormData();
       data.append("my_file", imageFile);
       const response = await axios.post(
-        "http://localhost:1708/api/admin/products/upload-image",
+        `${import.meta.env.VITE_API_URL}/api/admin/products/upload-image`,
         data
       );
       console.log(response.data.result.url);
@@ -115,7 +115,6 @@ ProductImageUpload.propTypes = {
   setImageFile: PropTypes.func.isRequired,
   setImageLoadingState: PropTypes.func.isRequired,
   imageLoadingState: PropTypes.bool.isRequired,
-  uploadedImageUrl: PropTypes.string,
   setUploadedImageUrl: PropTypes.func,
   isEditMode: PropTypes.bool.isRequired,
 };

@@ -7,9 +7,10 @@ const AdminProductTile = ({
   setCurrentEditedId,
   setOpenCreateProductDialog,
   setFormData,
+  handleDelete,
 }) => {
   return (
-    <Card className="w-full max-w-sm mx-auto">
+    <Card className="w-full max-w-sm mx-auto cursor-pointer">
       <div>
         <div className="relative">
           <img
@@ -23,8 +24,10 @@ const AdminProductTile = ({
           <div className="flex justify-between items-center mb-2">
             <span
               className={`${
-                product?.price > 0 ? "line-through" : ""
-              }text-lg font-semibold text-primary`}
+                product?.price > 0 && product?.salePrice
+                  ? "line-through opacity-70"
+                  : ""
+              } text-lg font-semibold text-primary`}
             >
               ${product?.price}
             </span>
@@ -43,13 +46,14 @@ const AdminProductTile = ({
           >
             Edit
           </Button>
-          <Button>Delete</Button>
+          <Button onClick={() => handleDelete(product?._id)}>Delete</Button>
         </CardFooter>
       </div>
     </Card>
   );
 };
 AdminProductTile.propTypes = {
+  handleDelete: PropTypes.func.isRequired,
   product: PropTypes.shape({
     image: PropTypes.string,
     title: PropTypes.string,

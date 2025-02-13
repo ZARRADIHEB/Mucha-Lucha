@@ -13,7 +13,7 @@ export const registerUser = createAsyncThunk(
   async (formData) => {
     try {
       const response = await axios.post(
-        "http://localhost:1708/api/auth/register",
+        `${import.meta.env.VITE_API_URL}/api/auth/register`,
         formData,
         { withCredentials: true }
       );
@@ -28,9 +28,25 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk("/auth/login", async (formData) => {
   try {
     const response = await axios.post(
-      "http://localhost:1708/api/auth/login",
+      `${import.meta.env.VITE_API_URL}/api/auth/login`,
       formData,
       { withCredentials: true }
+    );
+    return response.data;
+  } catch (error) {
+    return error.response?.data || { message: "An error occurred" };
+  }
+});
+
+// Logout
+export const logoutUser = createAsyncThunk("/auth/logout", async () => {
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/auth/logout`,
+      {},
+      {
+        withCredentials: true,
+      }
     );
     return response.data;
   } catch (error) {
@@ -42,7 +58,7 @@ export const loginUser = createAsyncThunk("/auth/login", async (formData) => {
 export const checkAuth = createAsyncThunk("/auth/check-auth", async () => {
   try {
     const response = await axios.get(
-      "http://localhost:1708/api/auth/check-auth",
+      `${import.meta.env.VITE_API_URL}/api/auth/check-auth`,
 
       {
         withCredentials: true,
@@ -78,6 +94,7 @@ const authSlice = createSlice({
         state.user = null;
         state.isAuthenticated = false;
       })
+
       .addCase(loginUser.pending, (state) => {
         state.isLoading = true;
       })
@@ -91,6 +108,7 @@ const authSlice = createSlice({
         state.user = null;
         state.isAuthenticated = false;
       })
+
       .addCase(checkAuth.pending, (state) => {
         state.isLoading = true;
       })
@@ -100,6 +118,12 @@ const authSlice = createSlice({
         state.isAuthenticated = action.payload.success ? true : false;
       })
       .addCase(checkAuth.rejected, (state) => {
+        state.isLoading = false;
+        state.user = null;
+        state.isAuthenticated = false;
+      })
+
+      .addCase(logoutUser.fulfilled, (state) => {
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
