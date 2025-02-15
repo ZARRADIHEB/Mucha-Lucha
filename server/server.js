@@ -39,7 +39,7 @@ app.use("/api/shop/address", shopAddressRouter);
 app.listen(PORT, async () => {
   try {
     await connectDB();
-    console.log(`Server is running => http://localhost:${PORT}`);
+    console.log(`Server is running => ${process.env.FRONTEND_URL}`);
   } catch (error) {
     console.log("Error when running the server", error);
   }
