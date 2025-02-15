@@ -45,7 +45,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
             alt={productDetails?.title}
             width={600}
             height={600}
-            className="aspect-square w-full object-fill"
+            className="aspect-square w-full object-cover"
           />
         </div>
         <div className="">

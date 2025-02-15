@@ -7,6 +7,28 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import Loader from "../common/Loading";
 
+// Remove background function
+const removeBg = async (imageFile) => {
+  const formData = new FormData();
+  formData.append("size", "auto");
+  formData.append("image_file", imageFile);
+
+  const response = await fetch("https://api.remove.bg/v1.0/removebg", {
+    method: "POST",
+    headers: {
+      "X-Api-Key": "sioXE4EPwUeMdwJMnTcXCWiF",
+    },
+    body: formData,
+  });
+
+  if (response.ok) {
+    const buffer = await response.arrayBuffer();
+    return new Blob([buffer], { type: "image/png" });
+  } else {
+    throw new Error("Error removing background");
+  }
+};
+
 const ProductImageUpload = ({
   imageFile,
   setImageFile,
@@ -18,7 +40,6 @@ const ProductImageUpload = ({
   const inputRef = useRef(null);
 
   const handleImageFileChange = (e) => {
-    console.log(e.target.files);
     const selectedFile = e.target.files?.[0];
     if (selectedFile) setImageFile(selectedFile);
   };
@@ -42,16 +63,31 @@ const ProductImageUpload = ({
 
   useEffect(() => {
     const uploadImageToCloudinary = async () => {
+      if (!imageFile) return;
+
       setImageLoadingState(true);
-      const data = new FormData();
-      data.append("my_file", imageFile);
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/admin/products/upload-image`,
-        data
-      );
-      console.log(response.data.result.url);
-      if (response.data?.success) setUploadedImageUrl(response.data.result.url);
-      setImageLoadingState(false);
+      try {
+        const noBgImageBlob = await removeBg(imageFile);
+
+        const formData = new FormData();
+        formData.append("file", noBgImageBlob);
+        formData.append("upload_preset", "Mucha_Lucha");
+
+        const cloudinaryResponse = await axios.post(
+          "https://api.cloudinary.com/v1_1/dwrfpjbmo/image/upload",
+          formData
+        );
+
+        const cloudinaryUrl = cloudinaryResponse.data.secure_url;
+
+        if (cloudinaryUrl) {
+          setUploadedImageUrl(cloudinaryUrl);
+        }
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      } finally {
+        setImageLoadingState(false);
+      }
     };
 
     if (imageFile !== null) uploadImageToCloudinary();
@@ -110,6 +146,7 @@ const ProductImageUpload = ({
     </div>
   );
 };
+
 ProductImageUpload.propTypes = {
   imageFile: PropTypes.object,
   setImageFile: PropTypes.func.isRequired,

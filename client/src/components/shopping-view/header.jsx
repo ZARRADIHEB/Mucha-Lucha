@@ -29,6 +29,7 @@ import PropTypes from "prop-types";
 import UserCartWrapper from "@/pages/shopping-view/cart-wrapper";
 import { fetchCartItems } from "@/store/shop/cart-slice";
 import { Label } from "../ui/label";
+import Switch from "../common/Theme";
 
 const MenuItems = ({ closeSheet }) => {
   const navigate = useNavigate();
@@ -81,6 +82,8 @@ const HeaderRightContent = () => {
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
+        <Switch />
+
         <Button
           onClick={() => setOpenCartSheet(true)}
           variant="outline"
@@ -100,8 +103,8 @@ const HeaderRightContent = () => {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Avatar className="bg-black cursor-pointer">
-            <AvatarFallback className="bg-black text-white font-extrabold">
+          <Avatar className="cursor-pointer ">
+            <AvatarFallback className="bg-black text-white font-extrabold dark:bg-gray-900 dark:text-white">
               {user?.userName[0].toUpperCase()}
             </AvatarFallback>
           </Avatar>

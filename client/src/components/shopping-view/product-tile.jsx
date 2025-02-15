@@ -15,12 +15,32 @@ const ShoppingProductTile = ({
           <img
             src={product?.image}
             alt={product?.title}
-            className="w-full h-[300px] object-fill rounded-t-lg"
+            className="w-full h-[300px] object-cover rounded-t-lg"
           />
 
-          {product?.salePrice > 0 ? (
-            <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
-              Sale
+          {product?.salePrice > 0 && product?.totalStock !== 0 ? (
+            <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600 ">
+              <span className="mr-2">Sale </span>
+              <span>
+                -
+                {(
+                  ((product.price - product.salePrice) / product.price) *
+                  100
+                ).toFixed(0)}
+                %
+              </span>
+            </Badge>
+          ) : null}
+
+          {product?.totalStock === 0 && (
+            <Badge className="absolute top-2 left-2 bg-gray-500 hover:bg-gray-600 animate-in">
+              <span>Out Of Stock</span>
+            </Badge>
+          )}
+
+          {product?.totalStock <= 10 && product?.totalStock >= 1 ? (
+            <Badge className="absolute top-2 right-2 bg-yellow-500 hover:bg-yellow-600 animate-pulse">
+              <span>Only {product?.totalStock} Left</span>
             </Badge>
           ) : null}
         </div>
@@ -39,14 +59,16 @@ const ShoppingProductTile = ({
           <div className="flex justify-between items-center mb-2">
             <span
               className={`${
-                product?.price > 0 && product?.salePrice
+                product?.price > 0 &&
+                product?.salePrice &&
+                product?.totalStock !== 0
                   ? "line-through text-muted-foreground"
                   : "text-lg text-primary font-semibold"
               } `}
             >
               ${product?.price}
             </span>
-            {product?.salePrice ? (
+            {product?.salePrice && product?.totalStock !== 0 ? (
               <span className="text-lg text-primary font-semibold">
                 ${product?.salePrice}
               </span>
@@ -55,7 +77,11 @@ const ShoppingProductTile = ({
         </CardContent>
       </div>
       <CardFooter>
-        <Button onClick={() => handleAddToCart(product._id)} className="w-full">
+        <Button
+          disabled={product?.totalStock === 0}
+          onClick={() => handleAddToCart(product._id)}
+          className={`w-full ${product?.totalStock === 0 ? "hidden" : ""}`}
+        >
           Add to cart
         </Button>
       </CardFooter>
@@ -73,6 +99,7 @@ ShoppingProductTile.propTypes = {
     brand: PropTypes.string,
     price: PropTypes.number,
     salePrice: PropTypes.number,
+    totalStock: PropTypes.number,
   }).isRequired,
   handleGetProductDetails: PropTypes.func.isRequired,
 };

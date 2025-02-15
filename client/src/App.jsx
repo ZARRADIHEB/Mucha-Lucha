@@ -33,7 +33,7 @@ function App() {
 
   if (isLoading) return <Loader />;
   return (
-    <div className="flex flex-col overflow-hidden bg-white">
+    <div className="flex flex-col overflow-hidden bg-white dark:bg-gray-900 dark:text-white min-h-screen">
       <Routes>
         {/* Auth Layout */}
         <Route

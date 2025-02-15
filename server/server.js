@@ -8,6 +8,7 @@ dotenv.config();
 import adminProductsRouter from "./routes/admin/products-routes.js";
 import shopProductsRouter from "./routes/shop/products-routes.js";
 import shopCartRouter from "./routes/shop/cart-routes.js";
+import shopAddressRouter from "./routes/shop/address-routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -33,6 +34,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductsRouter);
 app.use("/api/shop/products", shopProductsRouter);
 app.use("/api/shop/cart", shopCartRouter);
+app.use("/api/shop/address", shopAddressRouter);
 
 app.listen(PORT, async () => {
   try {

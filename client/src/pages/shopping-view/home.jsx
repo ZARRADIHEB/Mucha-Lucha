@@ -100,7 +100,7 @@ const ShoppingHome = () => {
     dispatch(
       fetchAllFilteredProducts({
         filterParams: {},
-        sortParmas: "price-low-to-high",
+        sortParams: "price-low-to-high",
       })
     );
   }, [dispatch]);
@@ -110,8 +110,8 @@ const ShoppingHome = () => {
   }, [productDetails]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="relative w-full h-[600px] overflow-hidden">
+    <div className="flex flex-col min-h-screen ">
+      <div className="relative w-full h-[600px] overflow-hidden ">
         {slides.map((slide, index) => (
           <img
             key={index}
@@ -119,7 +119,7 @@ const ShoppingHome = () => {
             alt="banner"
             className={`${
               index === currentSlide ? "opacity-100" : "opacity-0"
-            } absolute top-0 left-0 w-full h-full object-center transition-opacity duration-1000`}
+            } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
           />
         ))}
         <Button
@@ -130,7 +130,7 @@ const ShoppingHome = () => {
               (prevSlide) => (prevSlide - 1 + slides.length) % slides.length
             )
           }
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80"
+          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80 dark:bg-gray-900 dark:text-white"
         >
           <ChevronLeftIcon className="size-4" />
         </Button>
@@ -140,12 +140,12 @@ const ShoppingHome = () => {
           onClick={() =>
             setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length)
           }
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80"
+          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80 dark:bg-gray-900 dark:text-white"
         >
           <ChevronRightIcon className="size-4" />
         </Button>
       </div>
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 dark:bg-gray-900 dark:text-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">
             Shop By Category
@@ -169,7 +169,7 @@ const ShoppingHome = () => {
         </div>
       </section>
 
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 dark:bg-gray-900 dark:text-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">Shop By Brand</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -195,7 +195,7 @@ const ShoppingHome = () => {
         </div>
       </section>
 
-      <section className="py-12">
+      <section className="py-12 dark:bg-gray-900 dark:text-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">
             Featured Products
