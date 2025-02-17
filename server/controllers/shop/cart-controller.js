@@ -157,7 +157,7 @@ const updateCartItems = async (req, res) => {
       success: true,
       data: {
         ...cart._doc,
-        populatedCartItems,
+        items: populatedCartItems,
       },
     });
   } catch (error) {

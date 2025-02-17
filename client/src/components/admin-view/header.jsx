@@ -14,7 +14,7 @@ const AdminHeader = ({ setOpen }) => {
 
   return (
     <header className="flex items-center justify-between px-4 py-3 bg-background border-b">
-      <Switch />
+      <Switch customClass="hidden lg:block" />
       <Button onClick={() => setOpen(true)} className="lg:hidden sm:block">
         <AlignJustify />
         <span className="sr-only">Toggle Menu</span>

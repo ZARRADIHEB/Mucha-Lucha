@@ -80,9 +80,9 @@ const ShoppingProductTile = ({
         <Button
           disabled={product?.totalStock === 0}
           onClick={() => handleAddToCart(product._id)}
-          className={`w-full ${product?.totalStock === 0 ? "hidden" : ""}`}
+          className={`w-full ${product?.totalStock === 0 ? "opacity-50" : ""}`}
         >
-          Add to cart
+          {product?.totalStock === 0 ? "Out of stock" : "Add to cart"}
         </Button>
       </CardFooter>
     </Card>

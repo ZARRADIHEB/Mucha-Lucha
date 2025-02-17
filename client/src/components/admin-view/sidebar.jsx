@@ -4,6 +4,7 @@ import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { LayoutDashboard, Package, ShoppingBasket } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
+import Switch from "../common/Theme";
 
 const adminSidebarMenuItems = [
   {
@@ -44,6 +45,7 @@ const MenuItems = ({ setOpen }) => {
           <span>{menuItem.label}</span>
         </div>
       ))}
+      <Switch customClass=" mx-3 my-2 sm:block lg:hidden" />
     </nav>
   );
 };

@@ -2,17 +2,20 @@ import { Button } from "@/components/ui/button";
 import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import UserCartItemsContent from "./cart-items-content";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
-const UserCartWrapper = ({ cartItems }) => {
+const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
+  const navigate = useNavigate();
+
   const totalCartAmount =
     cartItems && cartItems.length > 0
       ? cartItems.reduce(
           (sum, currentItem) =>
             sum +
-              (currentItem?.salePrice > 0 || currentItem.productId.salePrice > 0
-                ? currentItem?.salePrice || currentItem.productId.salePrice
-                : currentItem?.price || currentItem.productId.price) *
-                currentItem?.quantity || currentItem.productId.quantity,
+            (currentItem?.salePrice > 0
+              ? currentItem?.salePrice
+              : currentItem?.price) *
+              currentItem?.quantity,
           0
         )
       : 0;
@@ -34,12 +37,22 @@ const UserCartWrapper = ({ cartItems }) => {
           <span className="font-bold">${totalCartAmount}</span>
         </div>
       </div>
-      <Button className="w-full mt-6">Checkout</Button>
+      <Button
+        onClick={() => {
+          navigate("/shop/Checkout");
+
+          setOpenCartSheet(false);
+        }}
+        className="w-full mt-6"
+      >
+        Checkout
+      </Button>
     </SheetContent>
   );
 };
 UserCartWrapper.propTypes = {
   cartItems: PropTypes.array,
+  setOpenCartSheet: PropTypes.func.isRequired,
 };
 
 export default UserCartWrapper;

@@ -2,9 +2,9 @@ import { Button } from "../ui/button";
 import { Dialog, DialogContent } from "../ui/dialog";
 import PropTypes from "prop-types";
 import { Separator } from "../ui/separator";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { StarIcon } from "lucide-react";
-import { Input } from "../ui/input";
+// import { Avatar, AvatarFallback } from "../ui/avatar";
+// import { StarIcon } from "lucide-react";
+// import { Input } from "../ui/input";
 import { useDispatch } from "react-redux";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { toast } from "@/hooks/use-toast";
@@ -38,7 +38,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
 
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
-      <DialogContent className="grid grid-rows-1 md:grid-cols-2 md:grid-rows-none gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
+      <DialogContent className="grid grid-rows-1 md:grid-cols-2 md:grid-rows-none gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]  max-h-screen">
         <div className="relative overflow-hidden rounded-lg">
           <img
             src={productDetails?.image}
@@ -51,28 +51,32 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
         <div className="">
           <div>
             <h1 className="text-3xl font-extrabold">{productDetails?.title}</h1>
-            <p className="text-muted-foreground text-2xl mb-5 mt-4">
+            <p className="text-muted-foreground text-2xl mb-5 mt-4 max-h-[200px] overflow-y-auto lg:max-h-screen ">
               {productDetails?.description}
             </p>
           </div>
           <div className="flex items-center justify-between">
             <p
-              className={`text-3xl  font-bold text-primary ${
-                productDetails?.salePrice > 0 ? "line-through" : ""
+              className={`text-2xl  font-bold text-primary ${
+                productDetails?.salePrice > 0 &&
+                productDetails?.totalStock !== 0
+                  ? "line-through opacity-50"
+                  : ""
               }`}
             >
               {" "}
               ${productDetails?.price}{" "}
             </p>
 
-            {productDetails?.salePrice > 0 ? (
-              <p className="text-2xl font-bold text-muted-foreground">
+            {productDetails?.salePrice > 0 &&
+            productDetails?.totalStock !== 0 ? (
+              <p className="text-2xl font-bold ">
                 {" "}
                 ${productDetails?.salePrice}{" "}
               </p>
             ) : null}
           </div>
-          <div className="flex items-center gap-2 mt-2">
+          {/* <div className="flex items-center gap-2 mt-2">
             <div className="flex items-center gap-0.5">
               <StarIcon className="size-5 fill-primary" />
               <StarIcon className="size-5 fill-primary" />
@@ -81,18 +85,24 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
               <StarIcon className="size-5 fill-primary" />
             </div>
             <span>(4,5)</span>
-          </div>
+          </div> */}
           <div className="my-5">
             <Button
               onClick={() => handleAddToCart(productDetails?._id)}
-              className="w-full"
+              className={`w-full ${
+                productDetails?.totalStock === 0
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
             >
-              Add to Cart
+              {productDetails?.totalStock === 0
+                ? "Out of stock"
+                : "Add to cart"}
             </Button>
           </div>
           <Separator />
 
-          <div className="max-h-[300px] overflow-y-scroll">
+          {/* <div className="max-h-[300px] overflow-y-scroll">
             <h2 className="text-xl font-bold my-4">Reviews</h2>
             <div className="grid gap-6">
               <div className="flex gap-4">
@@ -154,7 +164,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
               <Input placeholder="Write a review..." />
               <Button>Submit</Button>
             </div>
-          </div>
+          </div>*/}
         </div>
       </DialogContent>
     </Dialog>
@@ -170,6 +180,7 @@ ProductDetailsDialog.propTypes = {
     description: PropTypes.string,
     salePrice: PropTypes.number,
     price: PropTypes.number,
+    totalStock: PropTypes.number,
   }),
   user: PropTypes.shape({
     userName: PropTypes.string,

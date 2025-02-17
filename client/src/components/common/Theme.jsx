@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
-const Switch = () => {
+const Switch = ({ customClass }) => {
   const [darkMode, setDarkMode] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("theme") === "dark";
@@ -19,7 +20,9 @@ const Switch = () => {
   }, [darkMode]);
 
   return (
-    <label className="relative inline-flex items-center cursor-pointer">
+    <label
+      className={`${customClass} relative inline-flex items-center cursor-pointer`}
+    >
       <input
         type="checkbox"
         className="sr-only peer"
@@ -44,6 +47,9 @@ const Switch = () => {
       </div>
     </label>
   );
+};
+Switch.propTypes = {
+  customClass: PropTypes.string,
 };
 
 export default Switch;

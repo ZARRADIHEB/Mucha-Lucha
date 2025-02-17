@@ -16,7 +16,7 @@ const AdminProductTile = ({
           <img
             src={product?.image}
             alt={product?.title}
-            className="w-full h-[300px]  rounded-t-lg"
+            className="w-full h-[300px]  rounded-t-lg object-cover"
           />
         </div>
         <CardContent>

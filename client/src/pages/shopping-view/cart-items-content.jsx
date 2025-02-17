@@ -14,7 +14,7 @@ const UserCartItemsContent = ({ cartItem }) => {
     dispatch(
       updateCartItems({
         userId: user.id,
-        productId: getCartItem?.productId || getCartItem.productId._id,
+        productId: getCartItem?.productId,
         quantity:
           typeOfAction === "plus"
             ? getCartItem.quantity + 1
@@ -46,22 +46,18 @@ const UserCartItemsContent = ({ cartItem }) => {
     <div className="flex items-center space-x-4">
       <img
         className="size-16 sm:size-20 rounded flex-shrink-0"
-        src={cartItem?.image || cartItem.productId.image}
-        alt={cartItem?.title || cartItem.productId.title}
+        src={cartItem?.image}
+        alt={cartItem?.title}
       />
       <div className="flex-1 ">
-        <h3 className="font-extrabold">
-          {cartItem.title || cartItem.productId.title}
-        </h3>
+        <h3 className="font-extrabold">{cartItem.title}</h3>
         <div className="flex items-center mt-2 gap-1.5 sm:gap-3">
           <Button
             variant="outline"
             size="icon"
             className="size-6 sm:size-8 rounded-full "
             onClick={() => handleUpdateQuantity(cartItem, "minus")}
-            disabled={
-              cartItem?.quantity === 1 || cartItem?.productId?.quantity === 1
-            }
+            disabled={cartItem?.quantity === 1}
           >
             <Minus className="size-4" />
             <span className="sr-only">Decrease</span>
@@ -83,13 +79,9 @@ const UserCartItemsContent = ({ cartItem }) => {
       <div className="flex flex-col sm:flex-row items-center sm:items-center gap-2 sm:gap-7">
         <p className="font-semibold text-sm sm:text-lg">
           $
-          {(cartItem?.salePrice || cartItem.productId.salePrice > 0
-            ? cartItem?.salePrice ||
-              cartItem.productId.salePrice * cartItem?.quantity ||
-              cartItem.productId.quantity
-            : cartItem?.price ||
-              cartItem.productId.price * cartItem?.quantity ||
-              cartItem.productId.quantity
+          {(cartItem?.salePrice
+            ? cartItem?.salePrice * cartItem?.quantity
+            : cartItem?.price * cartItem?.quantity
           ).toFixed(2)}
         </p>
 
