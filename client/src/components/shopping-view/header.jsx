@@ -105,7 +105,7 @@ const HeaderRightContent = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="cursor-pointer ">
-            <AvatarFallback className="bg-black text-white font-extrabold dark:bg-gray-900 dark:text-white">
+            <AvatarFallback className="bg-black text-white font-extrabold ">
               {user?.userName[0].toUpperCase()}
             </AvatarFallback>
           </Avatar>

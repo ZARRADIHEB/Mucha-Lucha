@@ -7,10 +7,18 @@ const AddressCard = ({
   addressInfo,
   handleDeleteAddress,
   handleEditAddress,
+  setCurrentSelectedAddress,
 }) => {
   return (
     <div>
-      <Card className="max-w-[450px] ">
+      <Card
+        className="max-w-[450px] "
+        onClick={
+          setCurrentSelectedAddress
+            ? () => setCurrentSelectedAddress(addressInfo)
+            : null
+        }
+      >
         <CardContent className="grid p-4 gap-4 w-max max-w-full">
           <Label>
             <span className="font-extrabold spa">Address : </span>
@@ -58,6 +66,7 @@ AddressCard.propTypes = {
   }).isRequired,
   handleDeleteAddress: PropTypes.func.isRequired,
   handleEditAddress: PropTypes.func.isRequired,
+  setCurrentSelectedAddress: PropTypes.func,
 };
 
 export default AddressCard;

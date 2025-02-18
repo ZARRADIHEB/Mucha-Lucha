@@ -145,7 +145,7 @@ const ShoppingHome = () => {
           <ChevronRightIcon className="size-4" />
         </Button>
       </div>
-      <section className="py-12 dark:bg-gray-900 dark:text-white">
+      <section className="py-12 ">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">
             Shop By Category
@@ -169,7 +169,7 @@ const ShoppingHome = () => {
         </div>
       </section>
 
-      <section className="py-12 dark:bg-gray-900 dark:text-white">
+      <section className="py-12 ">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">Shop By Brand</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -195,7 +195,7 @@ const ShoppingHome = () => {
         </div>
       </section>
 
-      <section className="py-12 dark:bg-gray-900 dark:text-white">
+      <section className="py-12 ">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-8">
             Featured Products

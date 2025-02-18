@@ -9,6 +9,7 @@ import {
   fetchAllAddress,
 } from "@/store/shop/address-slice";
 import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import AddressCard from "./address-card";
 
@@ -20,7 +21,7 @@ const initialFormData = {
   notes: "",
 };
 
-const Address = () => {
+const Address = ({ setCurrentSelectedAddress }) => {
   const [formData, setFormData] = useState(initialFormData);
   const [currentEditedId, setCurrentEditedId] = useState(null);
   const [isValid, setIsValid] = useState(false);
@@ -151,6 +152,7 @@ const Address = () => {
                 addressInfo={address}
                 handleDeleteAddress={handleDeleteAddress}
                 handleEditAddress={handleEditAddress}
+                setCurrentSelectedAddress={setCurrentSelectedAddress}
               />
             ))
           : null}
@@ -172,6 +174,9 @@ const Address = () => {
       </CardContent>
     </Card>
   );
+};
+Address.propTypes = {
+  setCurrentSelectedAddress: PropTypes.func.isRequired,
 };
 
 export default Address;
