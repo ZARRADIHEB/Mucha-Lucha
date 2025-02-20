@@ -1,67 +1,120 @@
-import { IoMdTime } from "react-icons/io";
-import { DialogContent } from "../ui/dialog";
+import { ChevronsUpDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { DialogContent, DialogTitle } from "../ui/dialog";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import CommonForm from "../common/form";
 import { useState } from "react";
+import PropTypes from "prop-types";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { Badge } from "../ui/badge";
+import { useSelector } from "react-redux";
 
 const initialFormData = {
   status: "",
 };
 
-const AdminOrdersDetailsView = () => {
+const AdminOrdersDetailsView = ({ orderDetails }) => {
   const [formData, setFormData] = useState(initialFormData);
+  const [isOpenOrderDetails, setIsOpenOrderDetails] = useState(false);
+  const { user } = useSelector((state) => state.auth);
 
   const handleUpdateOrderStatus = (e) => {
     e.preventDefault();
+    console.log(formData);
   };
 
   return (
     <DialogContent className="sm:max-w-[600px]">
+      <VisuallyHidden>
+        <DialogTitle>Order Details</DialogTitle>
+      </VisuallyHidden>
       <div className="grid gap-6">
         <div className="grid gap-2">
           <div className="mt-6 flex justify-between items-center">
-            <p className="font-medium">Order ID</p>
-            <Label>123456</Label>
+            <p className="font-extrabold">Order ID</p>
+            <Label>{orderDetails?._id}</Label>
           </div>
           <div className="mt-2 flex justify-between items-center">
-            <p className="font-medium">Order Date</p>
-            <Label>17/02/2025</Label>
+            <p className="font-extrabold">Order Date</p>
+            <Label>{orderDetails?.orderDate.split("T")[0]}</Label>
           </div>
           <div className="mt-2 flex justify-between items-center">
-            <p className="font-medium">Order Price</p>
-            <Label>$1540</Label>
+            <p className="font-medium"></p>
+            <Label>${orderDetails?.totalAmount}</Label>
           </div>
           <div className="mt-2 flex justify-between items-center">
-            <p className="font-medium">Order Status</p>
+            <p className="font-extrabold">Order Status</p>
             <Label className="flex items-center gap-2">
-              In Process
-              <IoMdTime size={17} className="text-yellow-500" />
+              <Badge
+                className={
+                  orderDetails?.orderStatus === "confirmed"
+                    ? "bg-green-500"
+                    : "bg-yellow-500"
+                }
+              >
+                {orderDetails?.orderStatus}
+              </Badge>
             </Label>
           </div>
         </div>
         <Separator />
         <div className="grid gap-4">
-          <div className="grid gap-2">
-            <div className="font-medium">Order Details</div>
-            <ul className="grid gap-3">
-              <li className="flex items-center justify-between">
-                <span>Product One</span>
-                <span>$1044</span>
-              </li>
-            </ul>
-          </div>
+          <div className="font-extrabold">Order Details</div>
+          <Collapsible
+            open={isOpenOrderDetails}
+            onOpenChange={setIsOpenOrderDetails}
+          >
+            <CollapsibleTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="mb-4 transition-all duration-300 ease-in-out"
+              >
+                <span className="text-muted-foreground">
+                  {isOpenOrderDetails
+                    ? "Click to hide order details"
+                    : "Click to view order details"}
+                </span>
+                <ChevronsUpDown className="size-4 text-muted-foreground" />
+                <span className="sr-only">Toggle</span>
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="CollapsibleContent transition-all duration-300 ease-in-out overflow-hidden data-[state=open]:animate-collapsible-open data-[state=closed]:animate-collapsible-closed">
+              <ul className="grid gap-3">
+                {orderDetails?.cartItems.map((item) => (
+                  <li key={item._id} className="flex justify-between">
+                    <span>{item.title}</span>
+                    <span>
+                      <span className="font-extrabold">Price:</span> $
+                      {item.price}
+                      <span className="ml-2 font-extrabold">
+                        Quantity:
+                      </span>{" "}
+                      {item.quantity}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </CollapsibleContent>
+          </Collapsible>
         </div>
+        <Separator />
         <div className="grid gap-4">
           <div className="grid gap-2">
-            <div className="font-medium">Shipping Info</div>
+            <div className="font-extrabold">Shipping Info</div>
             <div className="grid gap-0.5 text-muted-foreground">
-              <span>iZ17</span>
-              <span>Address</span>
-              <span>City</span>
-              <span>Zipcode</span>
-              <span>Phone</span>
-              <span>Notes</span>
+              <span>{user?.userName}</span>
+              <span>{orderDetails?.addressInfo.address}</span>
+              <span>{orderDetails?.addressInfo.city}</span>
+              <span>{orderDetails?.addressInfo.zipcode}</span>
+              <span>{orderDetails?.addressInfo.phone}</span>
+              <span>{orderDetails?.addressInfo.notes}</span>
             </div>
           </div>
         </div>
@@ -90,6 +143,30 @@ const AdminOrdersDetailsView = () => {
       </div>
     </DialogContent>
   );
+};
+
+AdminOrdersDetailsView.propTypes = {
+  orderDetails: PropTypes.shape({
+    _id: PropTypes.string,
+    orderDate: PropTypes.string,
+    totalAmount: PropTypes.number,
+    orderStatus: PropTypes.string,
+    cartItems: PropTypes.arrayOf(
+      PropTypes.shape({
+        _id: PropTypes.string,
+        title: PropTypes.string,
+        price: PropTypes.number,
+        quantity: PropTypes.number,
+      })
+    ),
+    addressInfo: PropTypes.shape({
+      address: PropTypes.string,
+      city: PropTypes.string,
+      zipcode: PropTypes.string,
+      phone: PropTypes.string,
+      notes: PropTypes.string,
+    }),
+  }),
 };
 
 export default AdminOrdersDetailsView;

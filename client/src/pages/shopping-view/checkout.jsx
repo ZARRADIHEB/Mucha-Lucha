@@ -30,6 +30,20 @@ const ShoppingCheckout = () => {
       : 0;
 
   const handleInitiatePaypalPayment = () => {
+    if (cartItems.items.length === 0) {
+      return toast({
+        title: "Please add items to cart",
+        variant: "destructive",
+      });
+    }
+
+    if (!currentSelectedAddress) {
+      return toast({
+        title: "Please select an address",
+        variant: "destructive",
+      });
+    }
+
     const orderData = {
       userId: user.id,
       cartId: cartItems._id,
@@ -85,7 +99,10 @@ const ShoppingCheckout = () => {
         />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 mt-5 p-5">
-        <Address setCurrentSelectedAddress={setCurrentSelectedAddress} />
+        <Address
+          setCurrentSelectedAddress={setCurrentSelectedAddress}
+          numberOfCols={2}
+        />
         <div className="flex flex-col gap-5">
           {cartItems && cartItems.items && cartItems.items.length > 0
             ? cartItems.items.map((item) => (

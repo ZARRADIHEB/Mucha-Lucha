@@ -31,7 +31,7 @@ import { fetchCartItems } from "@/store/shop/cart-slice";
 import { Label } from "../ui/label";
 import Switch from "../common/Theme";
 
-const MenuItems = ({ closeSheet }) => {
+const MenuItems = ({ closeSheet = () => {} }) => {
   const navigate = useNavigate();
   const handleNavigate = (getCurrentMenuItem) => {
     sessionStorage.removeItem("filters");
@@ -53,7 +53,7 @@ const MenuItems = ({ closeSheet }) => {
           className="text-sm font-medium cursor-pointer"
           key={menuItem.id}
           onClick={() => {
-            closeSheet;
+            closeSheet();
             handleNavigate(menuItem);
           }}
         >

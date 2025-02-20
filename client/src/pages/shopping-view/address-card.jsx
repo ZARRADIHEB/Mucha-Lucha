@@ -8,32 +8,39 @@ const AddressCard = ({
   handleDeleteAddress,
   handleEditAddress,
   setCurrentSelectedAddress,
+  activeCard,
+  setActiveCard,
 }) => {
+  const handleCardClick = () => {
+    if (setCurrentSelectedAddress) {
+      setCurrentSelectedAddress(addressInfo);
+    }
+
+    setActiveCard(addressInfo._id);
+  };
+
   return (
     <div>
       <Card
-        className="max-w-[450px] "
-        onClick={
-          setCurrentSelectedAddress
-            ? () => setCurrentSelectedAddress(addressInfo)
-            : null
-        }
+        className={`max-w-[450px] cursor-pointer ${
+          activeCard === addressInfo._id ? "border-green-500" : ""
+        } `}
+        onClick={handleCardClick}
       >
-        <CardContent className="grid p-4 gap-4 w-max max-w-full">
-          <Label>
-            <span className="font-extrabold spa">Address : </span>
+        <CardContent className="grid p-4 gap-4 w-max max-w-full cursor-pointer">
+          <Label className="cursor-pointer">
+            <span className="font-extrabold ">Address : </span>
             {addressInfo?.address}
           </Label>
-          <Label>
-            <span className="font-extrabold spa">City : </span>{" "}
-            {addressInfo?.city}
+          <Label className="cursor-pointer">
+            <span className="font-extrabold ">City : </span> {addressInfo?.city}
           </Label>
-          <Label>
-            <span className="font-extrabold spa">Zipcode : </span>
+          <Label className="cursor-pointer">
+            <span className="font-extrabold ">Zipcode : </span>
             {addressInfo?.zipcode}
           </Label>
-          <Label>
-            <span className="font-extrabold spa">Phone : </span>
+          <Label className="cursor-pointer">
+            <span className="font-extrabold ">Phone : </span>
             {addressInfo?.phone
               ? `${addressInfo.phone.toString().slice(0, 2)}-${addressInfo.phone
                   .toString()
@@ -41,8 +48,8 @@ const AddressCard = ({
               : "N/A"}
           </Label>
 
-          <Label>
-            <span className="font-extrabold spa">Notes : </span>{" "}
+          <Label className="cursor-pointer">
+            <span className="font-extrabold ">Notes : </span>{" "}
             {addressInfo?.notes}
           </Label>
         </CardContent>
@@ -57,7 +64,10 @@ const AddressCard = ({
   );
 };
 AddressCard.propTypes = {
+  activeCard: PropTypes.string.isRequired,
+  setActiveCard: PropTypes.func.isRequired,
   addressInfo: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
     address: PropTypes.string,
     city: PropTypes.string,
     zipcode: PropTypes.string,

@@ -21,13 +21,18 @@ const initialFormData = {
   notes: "",
 };
 
-const Address = ({ setCurrentSelectedAddress }) => {
+const Address = ({ setCurrentSelectedAddress, numberOfCols }) => {
   const [formData, setFormData] = useState(initialFormData);
   const [currentEditedId, setCurrentEditedId] = useState(null);
   const [isValid, setIsValid] = useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { addressList } = useSelector((state) => state.shopAddress);
+  const [activeCard, setActiveCard] = useState(null);
+
+  const handleCardClick = (id) => {
+    setActiveCard(id);
+  };
 
   const handleManageAddress = (e) => {
     e.preventDefault();
@@ -144,7 +149,11 @@ const Address = ({ setCurrentSelectedAddress }) => {
 
   return (
     <Card>
-      <div className="mb-5 p-3 grid grid-cols-1 sm:grid-cols-2  gap-2">
+      <div
+        className={`mb-5 p-3 grid grid-cols-1 sm:grid-cols-${
+          numberOfCols || 3
+        } gap-2`}
+      >
         {addressList && addressList.length > 0
           ? addressList.map((address, index) => (
               <AddressCard
@@ -153,6 +162,8 @@ const Address = ({ setCurrentSelectedAddress }) => {
                 handleDeleteAddress={handleDeleteAddress}
                 handleEditAddress={handleEditAddress}
                 setCurrentSelectedAddress={setCurrentSelectedAddress}
+                activeCard={activeCard}
+                setActiveCard={handleCardClick}
               />
             ))
           : null}
@@ -167,7 +178,7 @@ const Address = ({ setCurrentSelectedAddress }) => {
           formControls={addressFormControls}
           formdata={formData}
           setFormData={setFormData}
-          buttonText={currentEditedId !== null ? "Edit" : "Add"}
+          buttonText={currentEditedId !== null ? "Save" : "Add"}
           onSubmit={handleManageAddress}
           isBtnDisabled={!isValid}
         />
@@ -177,6 +188,7 @@ const Address = ({ setCurrentSelectedAddress }) => {
 };
 Address.propTypes = {
   setCurrentSelectedAddress: PropTypes.func.isRequired,
+  numberOfCols: PropTypes.number.isRequired,
 };
 
 export default Address;
