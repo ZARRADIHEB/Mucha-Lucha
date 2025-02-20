@@ -2,10 +2,7 @@ import { Button } from "../ui/button";
 import { Dialog, DialogContent } from "../ui/dialog";
 import PropTypes from "prop-types";
 import { Separator } from "../ui/separator";
-// import { Avatar, AvatarFallback } from "../ui/avatar";
-// import { StarIcon } from "lucide-react";
-// import { Input } from "../ui/input";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { toast } from "@/hooks/use-toast";
 import { setProductDetails } from "@/store/shop/products-slice";
@@ -13,7 +10,29 @@ import { setProductDetails } from "@/store/shop/products-slice";
 const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
   const dispatch = useDispatch();
 
-  const handleAddToCart = (getCurrentProductId) => {
+  const { cartItems } = useSelector((state) => state.shopCart);
+
+  const handleAddToCart = (getCurrentProductId, getTotalStock) => {
+    let getCartItems = cartItems.items || [];
+
+    if (getCartItems.length) {
+      const indexOfCurrentItem = getCartItems.findIndex(
+        (item) => item.productId === getCurrentProductId
+      );
+
+      if (indexOfCurrentItem !== -1) {
+        const quantityInOrder = getCartItems[indexOfCurrentItem]?.quantity || 0;
+
+        if (quantityInOrder + 1 > getTotalStock) {
+          toast({
+            title: `Only ${getTotalStock} items left in stock`,
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+    }
+
     dispatch(
       addToCart({
         userId: user?.id,
@@ -25,7 +44,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
         dispatch(fetchCartItems(data.payload.data.userId));
         toast({
           title: "Product sent to cart",
-          className: "bg-green-500 text-white",
+          className: "bg-green-500",
         });
       }
     });
@@ -76,19 +95,12 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
               </p>
             ) : null}
           </div>
-          {/* <div className="flex items-center gap-2 mt-2">
-            <div className="flex items-center gap-0.5">
-              <StarIcon className="size-5 fill-primary" />
-              <StarIcon className="size-5 fill-primary" />
-              <StarIcon className="size-5 fill-primary" />
-              <StarIcon className="size-5 fill-primary" />
-              <StarIcon className="size-5 fill-primary" />
-            </div>
-            <span>(4,5)</span>
-          </div> */}
+
           <div className="my-5">
             <Button
-              onClick={() => handleAddToCart(productDetails?._id)}
+              onClick={() =>
+                handleAddToCart(productDetails?._id, productDetails?.totalStock)
+              }
               className={`w-full ${
                 productDetails?.totalStock === 0
                   ? "opacity-50 cursor-not-allowed"
@@ -101,70 +113,6 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
             </Button>
           </div>
           <Separator />
-
-          {/* <div className="max-h-[300px] overflow-y-scroll">
-            <h2 className="text-xl font-bold my-4">Reviews</h2>
-            <div className="grid gap-6">
-              <div className="flex gap-4">
-                <Avatar className="size-10 border">
-                  <AvatarFallback>{user.userName[0]}</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-bold">{user.userName}</h3>
-                  </div>
-                  <div className="flex items-center gap-0.5">
-                    <StarIcon className="size-5 fill-primary" />
-                    <StarIcon className="size-5 fill-primary" />
-                    <StarIcon className="size-5 fill-primary" />
-                    <StarIcon className="size-5 fill-primary" />
-                    <StarIcon className="size-5 fill-primary" />
-                  </div>
-                  <p className="text-muted-foreground">Very good</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <Avatar className="size-10 border">
-                  <AvatarFallback> {user.userName[0]}</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-bold">{user.userName}</h3>
-                  </div>
-                  <div className="flex items-center gap-0.5">
-                    <StarIcon className="size-5 fill-primary" />
-                    <StarIcon className="size-5 fill-primary" />
-                    <StarIcon className="size-5 fill-primary" />
-                    <StarIcon className="size-5 fill-primary" />
-                    <StarIcon className="size-5 fill-primary" />
-                  </div>
-                  <p className="text-muted-foreground">Very good</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <Avatar className="size-10 border">
-                  <AvatarFallback>{user.userName[0]}</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-bold">{user.userName}</h3>
-                  </div>
-                  <div className="flex items-center gap-0.5">
-                    <StarIcon className="size-5 fill-primary" />
-                    <StarIcon className="size-5 fill-primary" />
-                    <StarIcon className="size-5 fill-primary" />
-                    <StarIcon className="size-5 fill-primary" />
-                    <StarIcon className="size-5 fill-primary" />
-                  </div>
-                  <p className="text-muted-foreground">Very good</p>
-                </div>
-              </div>
-            </div>
-            <div className="mt-6 flex gap-2">
-              <Input placeholder="Write a review..." />
-              <Button>Submit</Button>
-            </div>
-          </div>*/}
         </div>
       </DialogContent>
     </Dialog>

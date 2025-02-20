@@ -1,6 +1,7 @@
 import paypal from "../../helpers/paypal.js";
 import OrderModel from "../../models/Order.js";
 import CartModel from "../../models/Cart.js";
+import ProductModel from "../../models/Product.js";
 
 const createOrder = async (req, res) => {
   try {
@@ -43,7 +44,7 @@ const createOrder = async (req, res) => {
             currency: "USD",
             total: totalAmount.toFixed(2),
           },
-          description: "description",
+          description: "Mucha Lucha Shop Order",
         },
       ],
     };
@@ -117,10 +118,25 @@ const capturePayment = async (req, res) => {
       });
     }
 
-    order.paymentStatus = "paid";
-    order.orderStatus = "confirmed";
+    order.paymentStatus = "Paid";
+    order.orderStatus = "Confirmed";
     order.paymentId = paymentId;
     order.payerId = payerId;
+
+    for (let item of order.cartItems) {
+      const product = await ProductModel.findById(item.productId);
+
+      if (!product) {
+        return res.status(404).json({
+          message: "Product not found",
+          success: false,
+        });
+      }
+
+      product.totalStock -= item.quantity;
+
+      await product.save();
+    }
 
     const getCardId = order.cartId;
 

@@ -83,7 +83,7 @@ const ShoppingHome = () => {
         dispatch(fetchCartItems(data.payload.data.userId));
         toast({
           title: "Product sent to cart",
-          className: "bg-green-500 text-white",
+          className: "bg-green-500 ",
         });
       }
     });

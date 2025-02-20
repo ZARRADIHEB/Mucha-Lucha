@@ -59,10 +59,12 @@ const updateOrderStatus = async (req, res) => {
     const { orderId } = req.params;
     const { orderStatus } = req.body;
 
-    const order = await OrderModel.findOneAndUpdate(
-      { orderId },
+    const order = await OrderModel.findByIdAndUpdate(
+      orderId,
       { orderStatus },
-      { new: true }
+      {
+        new: true,
+      }
     );
 
     if (!order) {

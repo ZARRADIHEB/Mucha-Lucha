@@ -9,8 +9,39 @@ const UserCartItemsContent = ({ cartItem }) => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.auth);
+  const { cartItems } = useSelector((state) => state.shopCart);
+  const { productList } = useSelector((state) => state.shopProducts);
 
   const handleUpdateQuantity = (getCartItem, typeOfAction) => {
+    if (typeOfAction === "plus") {
+      let getCartItems = cartItems.items || [];
+
+      if (getCartItems.length) {
+        const indexOfCurrentItem = getCartItems.findIndex(
+          (item) => item.productId === getCartItem.productId
+        );
+
+        const getCurrentProductIndex = productList.findIndex(
+          (product) => product._id === getCartItem.productId
+        );
+
+        const getTotalStock = productList[getCurrentProductIndex]?.totalStock;
+
+        if (indexOfCurrentItem !== -1) {
+          const quantityInOrder =
+            getCartItems[indexOfCurrentItem]?.quantity || 0;
+
+          if (quantityInOrder + 1 > getTotalStock) {
+            toast({
+              title: `Only ${getTotalStock} items left in stock`,
+              variant: "destructive",
+            });
+            return;
+          }
+        }
+      }
+    }
+
     dispatch(
       updateCartItems({
         userId: user.id,
@@ -24,7 +55,7 @@ const UserCartItemsContent = ({ cartItem }) => {
       if (data?.payload?.success) {
         toast({
           title: "Cart item updated successfully",
-          className: "bg-green-500 text-white",
+          className: "bg-green-500",
         });
       }
     });
@@ -37,7 +68,7 @@ const UserCartItemsContent = ({ cartItem }) => {
       data?.payload?.success
         ? toast({
             title: "Cart item deleted successfully",
-            className: "bg-green-500 text-white",
+            className: "bg-green-500",
           })
         : null;
     });
@@ -45,7 +76,7 @@ const UserCartItemsContent = ({ cartItem }) => {
   return (
     <div className="flex items-center space-x-4">
       <img
-        className="size-16 sm:size-20 rounded flex-shrink-0"
+        className="size-16 sm:size-20 rounded flex-shrink-0 object-cover"
         src={cartItem?.image}
         alt={cartItem?.title}
       />

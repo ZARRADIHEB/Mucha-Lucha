@@ -3,6 +3,7 @@ import { SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import UserCartItemsContent from "./cart-items-content";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
 
 const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
   const navigate = useNavigate();
@@ -20,14 +21,17 @@ const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
         )
       : 0;
   return (
-    <SheetContent className="sm:max-w-md">
+    <SheetContent className="sm:max-w-md overflow-y-scroll">
       <SheetHeader>
         <SheetTitle>Your Cart</SheetTitle>
       </SheetHeader>
-      <div className="mt-8 space-y-4">
+      <div className="mt-8 space-y-4 ">
         {cartItems && cartItems.length > 0
           ? cartItems.map((item) => (
-              <UserCartItemsContent key={item.productId} cartItem={item} />
+              <>
+                <UserCartItemsContent key={item.productId} cartItem={item} />
+                <Separator />
+              </>
             ))
           : null}
       </div>

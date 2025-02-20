@@ -57,7 +57,7 @@ const AdminProducts = () => {
             setCurrentEditedId(null);
             toast({
               title: "Product edited successfully",
-              className: "bg-green-500 text-white",
+              className: "bg-green-500",
             });
           }
         })
@@ -75,7 +75,7 @@ const AdminProducts = () => {
             setFormData(initialFormData);
             toast({
               title: "Product added successfully",
-              className: "bg-green-500 text-white",
+              className: "bg-green-500",
             });
           }
         });

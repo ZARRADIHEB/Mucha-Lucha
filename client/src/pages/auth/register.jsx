@@ -24,7 +24,7 @@ const AuthRegister = () => {
       if (data.payload?.success) {
         toast({
           title: data.payload.message,
-          className: "bg-green-500 text-white",
+          className: "bg-green-500",
         });
         navigate("/auth/login");
       } else {

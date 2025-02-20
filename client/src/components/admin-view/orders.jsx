@@ -18,13 +18,10 @@ import {
   resetOrderDetails,
 } from "@/store/admin/order-slice";
 import { Badge } from "../ui/badge";
-import Loader from "../common/Loading";
 
 const AdminOrdersView = () => {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
-  const { ordersList, orderDetails, isLoading } = useSelector(
-    (state) => state.adminOrder
-  );
+  const { ordersList, orderDetails } = useSelector((state) => state.adminOrder);
   const dispatch = useDispatch();
 
   const handleFetchOrderDetails = (orderId) => {
@@ -40,13 +37,6 @@ const AdminOrdersView = () => {
       setOpenDetailsDialog(true);
     }
   }, [orderDetails]);
-
-  console.log("ordersList", ordersList);
-  console.log("orderDetails", orderDetails);
-
-  if (isLoading) {
-    return <Loader />;
-  }
 
   return (
     <Card className="w-full max-w-[90vw] md:max-w-4xl mx-auto">
@@ -73,11 +63,14 @@ const AdminOrdersView = () => {
                 <TableCell>{order.orderDate.split("T")[0]}</TableCell>
                 <TableCell>
                   <Badge
-                    className={`${
-                      order.orderStatus === "confirmed"
+                    className={
+                      order?.orderStatus === "confirmed" ||
+                      order?.orderStatus === "Delivered"
                         ? "bg-green-500"
+                        : order?.orderStatus === "Rejected"
+                        ? "bg-red-500"
                         : "bg-yellow-500"
-                    }`}
+                    }
                   >
                     {order.orderStatus}
                   </Badge>

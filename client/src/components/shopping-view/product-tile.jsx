@@ -15,7 +15,7 @@ const ShoppingProductTile = ({
           <img
             src={product?.image}
             alt={product?.title}
-            className="w-full h-[300px] object-cover rounded-t-lg"
+            className="w-full h-[300px] object-contain rounded-t-lg"
           />
 
           {product?.salePrice > 0 && product?.totalStock !== 0 ? (
@@ -79,7 +79,7 @@ const ShoppingProductTile = ({
       <CardFooter>
         <Button
           disabled={product?.totalStock === 0}
-          onClick={() => handleAddToCart(product._id)}
+          onClick={() => handleAddToCart(product._id, product.totalStock)}
           className={`w-full ${product?.totalStock === 0 ? "opacity-50" : ""}`}
         >
           {product?.totalStock === 0 ? "Out of stock" : "Add to cart"}

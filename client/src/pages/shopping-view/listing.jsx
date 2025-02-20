@@ -38,12 +38,14 @@ const ShoppingListing = () => {
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
+  const { cartItems } = useSelector((state) => state.shopCart);
   const { user } = useSelector((state) => state.auth);
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
-  const [, setSearchParams] = useSearchParams();
+  const [searchParam, setSearchParams] = useSearchParams();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const { toast } = useToast();
+  const categorySearchParam = searchParam.get("category");
 
   const handleSort = (value) => {
     setSort(value);
@@ -75,7 +77,26 @@ const ShoppingListing = () => {
     dispatch(fetchProductDetails(getCurrentProductId));
   };
 
-  const handleAddToCart = (getCurrentProductId) => {
+  const handleAddToCart = (getCurrentProductId, getTotalStock) => {
+    let getCartItems = cartItems.items || [];
+
+    if (getCartItems.length) {
+      const indexOfCurrentItem = getCartItems.findIndex(
+        (item) => item.productId === getCurrentProductId
+      );
+
+      if (indexOfCurrentItem !== -1) {
+        const quantityInOrder = getCartItems[indexOfCurrentItem]?.quantity || 0;
+
+        if (quantityInOrder + 1 > getTotalStock) {
+          toast({
+            title: `Only ${getTotalStock} items left in stock`,
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+    }
     dispatch(
       addToCart({
         userId: user?.id,
@@ -87,7 +108,7 @@ const ShoppingListing = () => {
         dispatch(fetchCartItems(data.payload.data.userId));
         toast({
           title: "Product sent to cart",
-          className: "bg-green-500 text-white",
+          className: "bg-green-500",
         });
       }
     });
@@ -96,7 +117,7 @@ const ShoppingListing = () => {
   useEffect(() => {
     setSort("price-low-high");
     setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
-  }, []);
+  }, [categorySearchParam]);
 
   useEffect(() => {
     if (filters && Object.keys(filters).length > 0) {
@@ -154,7 +175,7 @@ const ShoppingListing = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 p-4">
           {productList && productList.length > 0
             ? productList.map((productItem) => (
                 <ShoppingProductTile

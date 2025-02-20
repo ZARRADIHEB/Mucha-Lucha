@@ -19,11 +19,10 @@ const AuthLogin = () => {
     e.preventDefault();
 
     dispatch(loginUser(formData)).then((data) => {
-      console.log(data);
       if (data?.payload?.success) {
         toast({
           title: data?.payload?.message,
-          className: "bg-green-500 text-white",
+          className: "bg-green-500",
         });
       } else {
         toast({

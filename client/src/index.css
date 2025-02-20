@@ -98,3 +98,29 @@
 .CollapsibleContent[data-state="closed"] {
   animation: collapsible-closed 300ms ease-in;
 }
+
+* {
+  --sb-track-color: #020917;
+  --sb-thumb-color: #000000;
+  --sb-size: 10px;
+}
+
+*::-webkit-scrollbar {
+  width: var(--sb-size);
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 3px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  }
+}

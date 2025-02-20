@@ -73,11 +73,14 @@ const ShoppingOrders = () => {
                   <TableCell>{order.orderDate.split("T")[0]}</TableCell>
                   <Table className="flex items-center h-[74px] gap-2">
                     <Badge
-                      className={`${
-                        order.orderStatus === "confirmed"
+                      className={
+                        orderDetails?.orderStatus === "Confirmed" ||
+                        orderDetails?.orderStatus === "Delivered"
                           ? "bg-green-500"
+                          : orderDetails?.orderStatus === "Rejected"
+                          ? "bg-red-500"
                           : "bg-yellow-500"
-                      }`}
+                      }
                     >
                       {order.orderStatus}
                     </Badge>

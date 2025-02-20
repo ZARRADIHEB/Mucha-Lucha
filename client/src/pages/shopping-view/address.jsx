@@ -81,7 +81,7 @@ const Address = ({ setCurrentSelectedAddress, numberOfCols }) => {
           if (data?.payload?.success) {
             toast({
               title: data?.payload?.message,
-              className: "bg-green-500 text-white",
+              className: "bg-green-500 ",
             });
 
             setFormData(initialFormData);
@@ -103,7 +103,7 @@ const Address = ({ setCurrentSelectedAddress, numberOfCols }) => {
           } else {
             toast({
               title: data?.payload?.message,
-              className: "bg-green-500 text-white",
+              className: "bg-green-500 ",
             }),
               setFormData(initialFormData);
           }
@@ -125,7 +125,7 @@ const Address = ({ setCurrentSelectedAddress, numberOfCols }) => {
       if (data?.payload?.success) {
         toast({
           title: data?.payload?.message,
-          className: "bg-green-500 text-white",
+          className: "bg-green-500",
         });
       }
     });

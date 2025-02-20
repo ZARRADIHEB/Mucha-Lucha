@@ -75,7 +75,7 @@ const ShoppingCheckout = () => {
       if (data.payload?.success) {
         toast({
           title: "Order created successfully",
-          className: "bg-green-500 text-white",
+          className: "bg-green-500 ",
         });
         setIsPaymentStarted(true);
         console.log("data", data);
