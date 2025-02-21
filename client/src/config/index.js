@@ -1,3 +1,5 @@
+import { FaSearch } from "react-icons/fa";
+
 export const registerFormControls = [
   {
     name: "userName",
@@ -136,6 +138,12 @@ export const shoppingViewHeaderMenuItems = [
     id: "accessories",
     label: "Accessories",
     path: "/shop/listing",
+  },
+  {
+    id: "search",
+    label: "",
+    path: "/shop/search",
+    icon: FaSearch,
   },
 ];
 

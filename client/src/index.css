@@ -101,8 +101,8 @@
 
 * {
   --sb-track-color: #020917;
-  --sb-thumb-color: #000000;
-  --sb-size: 10px;
+  --sb-thumb-color: #d5c8c8;
+  --sb-size: 7px;
 }
 
 *::-webkit-scrollbar {

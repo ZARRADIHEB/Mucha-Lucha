@@ -41,8 +41,6 @@ const ShoppingOrders = () => {
     }
   }, [orderDetails]);
 
-  console.log("orderDetails", orderDetails);
-
   if (isLoading) {
     return <Loader />;
   }
@@ -74,10 +72,10 @@ const ShoppingOrders = () => {
                   <Table className="flex items-center h-[74px] gap-2">
                     <Badge
                       className={
-                        orderDetails?.orderStatus === "Confirmed" ||
-                        orderDetails?.orderStatus === "Delivered"
+                        order?.orderStatus === "Confirmed" ||
+                        order?.orderStatus === "Delivered"
                           ? "bg-green-500"
-                          : orderDetails?.orderStatus === "Rejected"
+                          : order?.orderStatus === "Rejected"
                           ? "bg-red-500"
                           : "bg-yellow-500"
                       }

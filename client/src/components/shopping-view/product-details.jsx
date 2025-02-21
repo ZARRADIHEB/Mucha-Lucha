@@ -6,8 +6,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { toast } from "@/hooks/use-toast";
 import { setProductDetails } from "@/store/shop/products-slice";
+import { Input } from "../ui/input";
+import { StarIcon } from "lucide-react";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Label } from "../ui/label";
+import StarRatingComponent from "../common/star-rating";
+import { useState } from "react";
+import { addReview } from "@/store/shop/review-slice";
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
+  const [reviewMsg, setReviewMsg] = useState("");
+  const [rating, setRating] = useState(0);
+
   const dispatch = useDispatch();
 
   const { cartItems } = useSelector((state) => state.shopCart);
@@ -55,6 +65,29 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
     dispatch(setProductDetails());
   };
 
+  const handleRatingChange = (rating) => {
+    setRating(rating);
+  };
+
+  const handleAddReview = () => {
+    dispatch(
+      addReview({
+        productId: productDetails?._id,
+        userId: user?._id,
+        userName: user?.userName,
+        rating,
+        reviewMessage: reviewMsg,
+      })
+    ).then((data) => {
+      if (data?.payload?.success) {
+        toast({
+          title: "Review added successfully",
+          className: "bg-green-500",
+        });
+      }
+    });
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleDialogClose}>
       <DialogContent className="grid grid-rows-1 md:grid-cols-2 md:grid-rows-none gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]  max-h-screen">
@@ -83,17 +116,25 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
                   : ""
               }`}
             >
-              {" "}
-              ${productDetails?.price}{" "}
+              ${productDetails?.price}
             </p>
 
             {productDetails?.salePrice > 0 &&
             productDetails?.totalStock !== 0 ? (
               <p className="text-2xl font-bold ">
-                {" "}
-                ${productDetails?.salePrice}{" "}
+                ${productDetails?.salePrice}
               </p>
             ) : null}
+          </div>
+          <div className="flex items-center gap-2 mt-2">
+            <div className="flex items-center gap-0.5">
+              <StarIcon className="size-5 fill-primary" />
+              <StarIcon className="size-5 fill-primary" />
+              <StarIcon className="size-5 fill-primary" />
+              <StarIcon className="size-5 fill-primary" />
+              <StarIcon className="size-5 fill-primary" />
+            </div>
+            <span>(4,5)</span>
           </div>
 
           <div className="my-5">
@@ -113,6 +154,88 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
             </Button>
           </div>
           <Separator />
+          <div className="max-h-[300px] overflow-y-scroll">
+            <h2 className="text-xl font-bold my-4">Reviews</h2>
+            <div className="grid gap-6">
+              <div className="flex gap-4">
+                <Avatar className="size-10 border">
+                  <AvatarFallback>{user.userName[0]}</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold">{user.userName}</h3>
+                  </div>
+                  <div className="flex items-center gap-0.5">
+                    <StarIcon className="size-5 fill-primary" />
+                    <StarIcon className="size-5 fill-primary" />
+                    <StarIcon className="size-5 fill-primary" />
+                    <StarIcon className="size-5 fill-primary" />
+                    <StarIcon className="size-5 fill-primary" />
+                  </div>
+                  <p className="text-muted-foreground">Very good</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <Avatar className="size-10 border">
+                  <AvatarFallback> {user.userName[0]}</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold">{user.userName}</h3>
+                  </div>
+                  <div className="flex items-center gap-0.5">
+                    <StarIcon className="size-5 fill-primary" />
+                    <StarIcon className="size-5 fill-primary" />
+                    <StarIcon className="size-5 fill-primary" />
+                    <StarIcon className="size-5 fill-primary" />
+                    <StarIcon className="size-5 fill-primary" />
+                  </div>
+                  <p className="text-muted-foreground">Very good</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <Avatar className="size-10 border">
+                  <AvatarFallback>{user.userName[0]}</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold">{user.userName}</h3>
+                  </div>
+                  <div className="flex items-center gap-0.5">
+                    <StarIcon className="size-5 fill-primary" />
+                    <StarIcon className="size-5 fill-primary" />
+                    <StarIcon className="size-5 fill-primary" />
+                    <StarIcon className="size-5 fill-primary" />
+                    <StarIcon className="size-5 fill-primary" />
+                  </div>
+                  <p className="text-muted-foreground">Very good</p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6 flex flex-col gap-2">
+              <Label>Write a review</Label>
+              <div className="flex  gap-1">
+                {
+                  <StarRatingComponent
+                    rating={rating}
+                    handleRatingChange={handleRatingChange}
+                  />
+                }
+              </div>
+              <Input
+                name="reviewMsg"
+                value={reviewMsg}
+                onChange={(e) => setReviewMsg(e.target.value)}
+                placeholder="Write a review..."
+              />
+              <Button
+                onClick={handleAddReview}
+                disabled={reviewMsg.trim() === ""}
+              >
+                Submit
+              </Button>
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
@@ -121,6 +244,8 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
 ProductDetailsDialog.propTypes = {
   open: PropTypes.bool,
   setOpen: PropTypes.func,
+  _id: PropTypes.string,
+
   productDetails: PropTypes.shape({
     _id: PropTypes.string,
     image: PropTypes.string,
@@ -129,9 +254,11 @@ ProductDetailsDialog.propTypes = {
     salePrice: PropTypes.number,
     price: PropTypes.number,
     totalStock: PropTypes.number,
+    id: PropTypes.string,
   }),
   user: PropTypes.shape({
     userName: PropTypes.string,
+    _id: PropTypes.string,
     id: PropTypes.string,
   }),
 };

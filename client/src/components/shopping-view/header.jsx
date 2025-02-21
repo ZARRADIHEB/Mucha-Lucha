@@ -43,7 +43,9 @@ const MenuItems = ({ closeSheet = () => {} }) => {
   const handleNavigate = (getCurrentMenuItem) => {
     sessionStorage.removeItem("filters");
     const currentFilter =
-      getCurrentMenuItem.id !== "home" && getCurrentMenuItem.id !== "products"
+      getCurrentMenuItem.id !== "home" &&
+      getCurrentMenuItem.id !== "products" &&
+      getCurrentMenuItem.id !== "search"
         ? {
             category: [getCurrentMenuItem.id],
           }
@@ -61,7 +63,7 @@ const MenuItems = ({ closeSheet = () => {} }) => {
     <nav className="flex flex-col mb-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
       {shoppingViewHeaderMenuItems.map((menuItem) => (
         <Label
-          className="text-sm font-medium cursor-pointer"
+          className="text-sm font-medium cursor-pointer flex items-center"
           key={menuItem.id}
           onClick={() => {
             closeSheet();
@@ -69,6 +71,7 @@ const MenuItems = ({ closeSheet = () => {} }) => {
           }}
         >
           {menuItem.label}
+          {menuItem.icon ? <menuItem.icon className="size-5 ml-6" /> : null}
         </Label>
       ))}
     </nav>
