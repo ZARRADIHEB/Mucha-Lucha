@@ -2,11 +2,12 @@ import { useDispatch, useSelector } from "react-redux";
 import img from "../../assets/account.jpg";
 import Address from "./address";
 import UserCartItemsContent from "./cart-items-content";
-import { Button } from "@/components/ui/button";
-import { FaPaypal } from "react-icons/fa";
+// import { Button } from "@/components/ui/button";
+// import { FaPaypal } from "react-icons/fa";
 import { useState } from "react";
 import { createNewOrder } from "@/store/shop/order-slice";
 import { toast } from "@/hooks/use-toast";
+import OrderBtn from "@/components/shopping-view/OrderBtn";
 
 const ShoppingCheckout = () => {
   const { cartItems } = useSelector((state) => state.shopCart);
@@ -78,7 +79,6 @@ const ShoppingCheckout = () => {
           className: "bg-green-500 ",
         });
         setIsPaymentStarted(true);
-        console.log("data", data);
       } else {
         setIsPaymentStarted(false);
       }
@@ -116,10 +116,12 @@ const ShoppingCheckout = () => {
             </div>
           </div>
           <div className="mt-4 w-full">
-            <Button onClick={handleInitiatePaypalPayment} className="w-full">
-              <FaPaypal />
-              Checkout with Paypal
-            </Button>
+            {
+              <OrderBtn
+                handleInitiatePaypalPayment={handleInitiatePaypalPayment}
+                currentSelectedAddress={currentSelectedAddress}
+              />
+            }
           </div>
         </div>
       </div>

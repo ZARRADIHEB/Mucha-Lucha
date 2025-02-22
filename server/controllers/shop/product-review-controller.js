@@ -9,7 +9,7 @@ const addProductReview = async (req, res) => {
     const order = await OrderModel.findOne({
       userId: userId,
       "cartItems.productId": productId,
-      OrderModel: "delivered",
+      orderStatus: "Confirmed",
     });
 
     if (!order) {
@@ -29,7 +29,7 @@ const addProductReview = async (req, res) => {
         .json({ message: "You have already reviewed this product" });
     }
 
-    const newReviw = new ReviewModel({
+    const newReview = new ReviewModel({
       productId,
       userId,
       userName,
@@ -37,7 +37,7 @@ const addProductReview = async (req, res) => {
       rating,
     });
 
-    await newReviw.save();
+    await newReview.save();
 
     const reviews = await ReviewModel.find({ productId: productId });
     const totalReviews = reviews.length;
@@ -54,7 +54,7 @@ const addProductReview = async (req, res) => {
     res.status(201).json({
       message: "Review added successfully",
       success: true,
-      data: newReviw,
+      data: newReview,
     });
   } catch (error) {
     console.log(error);

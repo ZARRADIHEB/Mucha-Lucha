@@ -38,6 +38,7 @@ function App() {
   return (
     <div className="flex flex-col overflow-hidden bg-white dark:bg-gray-900 dark:text-white min-h-screen">
       <Routes>
+        <Route path="/" element={"Mucha Lucha home page"}></Route>
         {/* Auth Layout */}
         <Route
           path="/auth"

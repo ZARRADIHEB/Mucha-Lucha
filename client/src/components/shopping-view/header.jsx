@@ -39,7 +39,9 @@ import Switch from "../common/Theme";
 const MenuItems = ({ closeSheet = () => {} }) => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const [, setSearchParams] = useSearchParams();
+
   const handleNavigate = (getCurrentMenuItem) => {
     sessionStorage.removeItem("filters");
     const currentFilter =
@@ -102,8 +104,13 @@ const HeaderRightContent = () => {
           onClick={() => setOpenCartSheet(true)}
           variant="outline"
           size="icon"
+          className="relative"
         >
           <ShoppingBasket className="size-6" />
+          <span className="absolute top-[-3px] right-1 font-bold">
+            {cartItems?.items?.length}
+          </span>
+
           <span className="sr-only">User Cart</span>
         </Button>
         <UserCartWrapper
