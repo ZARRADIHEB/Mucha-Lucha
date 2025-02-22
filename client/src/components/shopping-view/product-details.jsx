@@ -212,11 +212,11 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
                 reviews.map((review, index) => (
                   <div key={index} className="flex gap-4">
                     <Avatar className="size-8 border sm:size-10">
-                      <AvatarFallback>{user.userName[0]}</AvatarFallback>
+                      <AvatarFallback>{review.userName[0]}</AvatarFallback>
                     </Avatar>
                     <div className="grid gap-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-bold">{user.userName}</h3>
+                        <h3 className="font-bold">{review.userName}</h3>
                       </div>
                       <div className="flex items-center gap-0.5">
                         <StarRatingComponent rating={review.rating} />
