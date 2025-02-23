@@ -13,7 +13,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Badge } from "../ui/badge";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   getAllOrdersForAdmin,
   getOrderDetailsForAdmin,
@@ -30,8 +30,6 @@ const initialFormData = {
 const AdminOrdersDetailsView = ({ orderDetails }) => {
   const [formData, setFormData] = useState(initialFormData);
   const [isOpenOrderDetails, setIsOpenOrderDetails] = useState(false);
-
-  const { user } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 
@@ -156,7 +154,7 @@ const AdminOrdersDetailsView = ({ orderDetails }) => {
           <div className="grid gap-2">
             <div className="font-extrabold">Shipping Info</div>
             <div className="grid gap-0.5 text-muted-foreground">
-              <span>{user?.userName}</span>
+              <span>{orderDetails?.addressInfo.userName}</span>
               <span>{orderDetails?.addressInfo.address}</span>
               <span>{orderDetails?.addressInfo.city}</span>
               <span>{orderDetails?.addressInfo.zipcode}</span>
@@ -209,6 +207,7 @@ AdminOrdersDetailsView.propTypes = {
       })
     ),
     addressInfo: PropTypes.shape({
+      userName: PropTypes.string,
       address: PropTypes.string,
       city: PropTypes.string,
       zipcode: PropTypes.string,

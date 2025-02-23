@@ -13,12 +13,18 @@ import { IoMdTime } from "react-icons/io";
 import { MdDone } from "react-icons/md";
 import { Button } from "../ui/button";
 import { ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
-const ShoppingOrderDetailsView = ({ orderDetails }) => {
+const ShoppingOrderDetailsView = ({ orderDetails, openDetailsDialog }) => {
   const { user } = useSelector((state) => state.auth);
-  const [isOpenOrderDetails, setIsOpenOrderDetails] = useState(false);
+  const [isOpenOrderDescription, setIsOpenOrderDescription] = useState(false);
+
+  useEffect(() => {
+    if (!openDetailsDialog) {
+      setIsOpenOrderDescription(false);
+    }
+  }, [openDetailsDialog]);
 
   return (
     <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
@@ -77,8 +83,8 @@ const ShoppingOrderDetailsView = ({ orderDetails }) => {
         <div className="grid gap-4">
           <div className="font-extrabold">Order Details</div>
           <Collapsible
-            open={isOpenOrderDetails}
-            onOpenChange={setIsOpenOrderDetails}
+            open={isOpenOrderDescription}
+            onOpenChange={setIsOpenOrderDescription}
           >
             <CollapsibleTrigger asChild>
               <Button
@@ -87,7 +93,7 @@ const ShoppingOrderDetailsView = ({ orderDetails }) => {
                 className="mb-4 transition-all duration-300 ease-in-out"
               >
                 <span className="text-muted-foreground">
-                  {isOpenOrderDetails
+                  {isOpenOrderDescription
                     ? "Click to hide order details"
                     : "Click to view order details"}
                 </span>
@@ -100,7 +106,7 @@ const ShoppingOrderDetailsView = ({ orderDetails }) => {
                 {orderDetails?.cartItems.map((item) => (
                   <li
                     key={item._id}
-                    className="flex justify-between border-b pb-1"
+                    className="flex justify-between border-b pb-3 items-center"
                   >
                     <span>{item.title}</span>
                     <span className="flex items-center gap-2 flex-col">
@@ -160,6 +166,7 @@ ShoppingOrderDetailsView.propTypes = {
       notes: PropTypes.string,
     }),
   }),
+  openDetailsDialog: PropTypes.bool,
 };
 
 export default ShoppingOrderDetailsView;

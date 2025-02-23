@@ -56,14 +56,15 @@ const ShoppingCheckout = () => {
         quantity: item.quantity,
       })),
       addressInfo: {
+        userName: user.userName,
         address: currentSelectedAddress?.address,
         city: currentSelectedAddress?.city,
         zipcode: currentSelectedAddress?.zipcode,
         phone: currentSelectedAddress?.phone,
         notes: currentSelectedAddress?.notes,
       },
-      orderStatus: "pending",
-      paymentStatus: "pending",
+      orderStatus: "Pending",
+      paymentStatus: "Pending",
       paymentMethod: "paypal",
       totalAmount: totalCartAmount,
       orderDate: new Date(),
@@ -115,7 +116,7 @@ const ShoppingCheckout = () => {
               <span className="font-bold">${totalCartAmount}</span>
             </div>
           </div>
-          <div className="mt-4 w-full">
+          <div className="mt-4 w-full text-center">
             {
               <OrderBtn
                 handleInitiatePaypalPayment={handleInitiatePaypalPayment}

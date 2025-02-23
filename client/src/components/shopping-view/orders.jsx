@@ -18,15 +18,12 @@ import {
   resetOrderDetails,
 } from "@/store/shop/order-slice";
 import { Badge } from "../ui/badge";
-import Loader from "../common/Loading";
 
 const ShoppingOrders = () => {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const { orderList, orderDetails, isLoading } = useSelector(
-    (state) => state.shopOrder
-  );
+  const { orderList, orderDetails } = useSelector((state) => state.shopOrder);
 
   const handleFetchOrderDetails = (orderId) => {
     dispatch(getOrderDetails(orderId));
@@ -40,10 +37,6 @@ const ShoppingOrders = () => {
       setOpenDetailsDialog(true);
     }
   }, [orderDetails]);
-
-  if (isLoading) {
-    return <Loader />;
-  }
 
   return (
     <Card>
@@ -97,7 +90,10 @@ const ShoppingOrders = () => {
                       >
                         View Details
                       </Button>
-                      <ShoppingOrderDetailsView orderDetails={orderDetails} />
+                      <ShoppingOrderDetailsView
+                        orderDetails={orderDetails}
+                        openDetailsDialog={openDetailsDialog}
+                      />
                     </Dialog>
                   </TableCell>
                 </TableRow>

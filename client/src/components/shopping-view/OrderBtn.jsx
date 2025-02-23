@@ -114,7 +114,7 @@ const OrderBtn = ({ handleInitiatePaypalPayment, currentSelectedAddress }) => {
     return () => {
       button.removeEventListener("click", clickHandler);
     };
-  }, []);
+  }, [currentSelectedAddress]);
 
   return (
     <>
@@ -371,39 +371,12 @@ const OrderBtn = ({ handleInitiatePaypalPayment, currentSelectedAddress }) => {
         *::after {
           box-sizing: inherit;
         }
-        body {
-          min-height: 100vh;
-          display: flex;
-          font-family: 'Inter UI', 'Inter', Arial;
-          justify-content: center;
-          align-items: center;
-          background: #ECEFFC;
-        }
-        .dribbble {
-          position: fixed;
-          right: 20px;
-          bottom: 20px;
-        }
-        .dribbble img {
-          display: block;
-          height: 28px;
-        }
-        .twitter {
-          position: fixed;
-          right: 64px;
-          bottom: 14px;
-        }
-        .twitter svg {
-          width: 32px;
-          height: 32px;
-          fill: #1da1f2;
-        }
+
       `}</style>
       <button
         className="truck-button"
         ref={btnRef}
         onClick={handleInitiatePaypalPayment}
-        disabled={false}
       >
         <span className="default">Complete Order</span>
         <span className="success">
