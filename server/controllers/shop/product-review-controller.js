@@ -66,6 +66,7 @@ const getProductsReview = async (req, res) => {
   try {
     const { productId } = req.params;
     const reviews = await ReviewModel.find({ productId });
+
     res.status(200).json({ success: true, data: reviews });
   } catch (error) {
     console.log(error);
@@ -73,4 +74,14 @@ const getProductsReview = async (req, res) => {
   }
 };
 
-export { addProductReview, getProductsReview };
+const AllReviews = async (req, res) => {
+  try {
+    const reviewsList = await ReviewModel.find();
+    res.status(200).json({ success: true, data: reviewsList });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export { addProductReview, getProductsReview, AllReviews };

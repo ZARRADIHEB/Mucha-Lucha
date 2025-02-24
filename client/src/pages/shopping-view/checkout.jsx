@@ -6,7 +6,7 @@ import UserCartItemsContent from "./cart-items-content";
 // import { FaPaypal } from "react-icons/fa";
 import { useState } from "react";
 import { createNewOrder } from "@/store/shop/order-slice";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "react-toastify";
 import OrderBtn from "@/components/shopping-view/OrderBtn";
 
 const ShoppingCheckout = () => {
@@ -32,16 +32,28 @@ const ShoppingCheckout = () => {
 
   const handleInitiatePaypalPayment = () => {
     if (cartItems.items.length === 0) {
-      return toast({
-        title: "Please add items to cart",
-        variant: "destructive",
+      return toast.error("Please add items to cart", {
+        className: " dark:bg-gray-900 dark:text-white",
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progressClassName: "custom-progress-bar",
       });
     }
 
     if (!currentSelectedAddress) {
-      return toast({
-        title: "Please select an address",
-        variant: "destructive",
+      return toast.error("Please select an address", {
+        className: " dark:bg-gray-900 dark:text-white",
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progressClassName: "custom-progress-bar",
       });
     }
 
@@ -75,9 +87,15 @@ const ShoppingCheckout = () => {
 
     dispatch(createNewOrder(orderData)).then((data) => {
       if (data.payload?.success) {
-        toast({
-          title: "Order created successfully",
-          className: "bg-green-500 ",
+        toast.success("Order created successfully", {
+          className: " dark:bg-gray-900 dark:text-white",
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progressClassName: "custom-progress-bar",
         });
         setIsPaymentStarted(true);
       } else {

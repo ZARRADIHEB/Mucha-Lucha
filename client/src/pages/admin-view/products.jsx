@@ -9,7 +9,6 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { addProductFormElements } from "@/config";
-import { toast } from "@/hooks/use-toast";
 import {
   addNewProduct,
   deleteProduct,
@@ -18,6 +17,7 @@ import {
 } from "@/store/admin/products-slice";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const initialFormData = {
   image: null,
@@ -55,9 +55,16 @@ const AdminProducts = () => {
             setFormData(initialFormData);
             setOpenCreateProductDialog(false);
             setCurrentEditedId(null);
-            toast({
-              title: "Product edited successfully",
-              className: "bg-green-500",
+
+            toast.success("Product edited successfully", {
+              className: " dark:bg-gray-900 dark:text-white",
+              position: "bottom-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progressClassName: "custom-progress-bar",
             });
           }
         })
@@ -73,9 +80,16 @@ const AdminProducts = () => {
             setOpenCreateProductDialog(false);
             setImageFile(null);
             setFormData(initialFormData);
-            toast({
-              title: "Product added successfully",
-              className: "bg-green-500",
+
+            toast.success("Product added successfully", {
+              className: " dark:bg-gray-900 dark:text-white",
+              position: "bottom-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progressClassName: "custom-progress-bar",
             });
           }
         });

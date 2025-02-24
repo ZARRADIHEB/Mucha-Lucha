@@ -25,7 +25,7 @@ import { SiPuma } from "react-icons/si";
 import { SiZara } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "react-toastify";
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
 
 const categoriesWithIcons = [
@@ -52,6 +52,8 @@ const ShoppingHome = () => {
   const { productList, productDetails } = useSelector(
     (state) => state.shopProducts
   );
+  const { cartItems } = useSelector((state) => state.shopCart);
+
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -71,7 +73,34 @@ const ShoppingHome = () => {
     dispatch(fetchProductDetails(getCurrentProductId));
   };
 
-  const handleAddToCart = (getCurrentProductId) => {
+  const handleAddToCart = (getCurrentProductId, getTotalStock) => {
+    let getCartItems = cartItems.items || [];
+
+    if (getCartItems.length) {
+      const indexOfCurrentItem = getCartItems.findIndex(
+        (item) => item.productId === getCurrentProductId
+      );
+
+      if (indexOfCurrentItem !== -1) {
+        const quantityInOrder = getCartItems[indexOfCurrentItem]?.quantity || 0;
+
+        if (quantityInOrder + 1 > getTotalStock) {
+          toast.error(`Only ${getTotalStock} items left in stock`, {
+            className: " dark:bg-gray-900 dark:text-white",
+            position: "bottom-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progressClassName: "custom-progress-bar",
+          });
+
+          return;
+        }
+      }
+    }
+
     dispatch(
       addToCart({
         userId: user?.id,
@@ -81,9 +110,16 @@ const ShoppingHome = () => {
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(data.payload.data.userId));
-        toast({
-          title: "Product sent to cart",
-          className: "bg-green-500 ",
+
+        toast.success("Product sent to cart", {
+          className: "dark:bg-gray-900 dark:text-white",
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progressClassName: "custom-progress-bar",
         });
       }
     });

@@ -5,6 +5,7 @@ const initialState = {
   isAuthenticated: false,
   isLoading: true,
   user: null,
+  allUsers: [],
 };
 
 // Register
@@ -73,6 +74,17 @@ export const checkAuth = createAsyncThunk("/auth/check-auth", async () => {
   }
 });
 
+export const getAllUsers = createAsyncThunk("/auth/allUsers", async () => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/auth/allUsers`
+    );
+    return response.data;
+  } catch (error) {
+    return error.response?.data || { message: "An error occurred" };
+  }
+});
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -127,6 +139,18 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
+      })
+
+      .addCase(getAllUsers.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAllUsers.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.allUsers = action.payload.users;
+      })
+      .addCase(getAllUsers.rejected, (state) => {
+        state.isLoading = false;
+        state.allUsers = [];
       });
   },
 });

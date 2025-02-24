@@ -198,4 +198,22 @@ const authMiddleware = async (req, res, next) => {
   }
 };
 
-export { register, login, logout, authMiddleware };
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await UserModel.find();
+
+    return res.status(200).json({
+      message: "All users",
+      success: true,
+      users,
+    });
+  } catch (error) {
+    console.error("Get all users error:", error.message || error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
+
+export { register, login, logout, authMiddleware, getAllUsers };

@@ -1,10 +1,10 @@
 import CommonForm from "@/components/common/form";
 import { loginFormControls } from "@/config";
-import { toast } from "@/hooks/use-toast";
 import { loginUser } from "@/store/auth-slice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const initialState = {
   email: "",
@@ -20,14 +20,26 @@ const AuthLogin = () => {
 
     dispatch(loginUser(formData)).then((data) => {
       if (data?.payload?.success) {
-        toast({
-          title: data?.payload?.message,
-          className: "bg-green-500",
+        toast.success(data?.payload?.message, {
+          className: " dark:bg-gray-900 dark:text-white",
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progressClassName: "custom-progress-bar",
         });
       } else {
-        toast({
-          title: data.payload?.message || "An error has occurred",
-          variant: "destructive",
+        toast.error(data?.payload?.message || "An error has occurred", {
+          className: " dark:bg-gray-900 dark:text-white",
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progressClassName: "custom-progress-bar",
         });
       }
     });

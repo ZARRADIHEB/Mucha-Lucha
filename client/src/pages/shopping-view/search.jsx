@@ -1,7 +1,7 @@
 import ProductDetailsDialog from "@/components/shopping-view/product-details";
 import ShoppingProductTile from "@/components/shopping-view/product-tile";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "react-toastify";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import { fetchProductDetails } from "@/store/shop/products-slice";
 import { getSearchResult, resetSearchResult } from "@/store/shop/search-slice";
@@ -34,9 +34,15 @@ const SearchProducts = () => {
         const quantityInOrder = getCartItems[indexOfCurrentItem]?.quantity || 0;
 
         if (quantityInOrder + 1 > getTotalStock) {
-          toast({
-            title: `Only ${getTotalStock} items left in stock`,
-            variant: "destructive",
+          toast.error(`Only ${getTotalStock} items left in stock`, {
+            className: " dark:bg-gray-900 dark:text-white",
+            position: "bottom-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progressClassName: "custom-progress-bar",
           });
           return;
         }
@@ -51,9 +57,16 @@ const SearchProducts = () => {
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(data.payload.data.userId));
-        toast({
-          title: "Product sent to cart",
-          className: "bg-green-500",
+
+        toast.success("Product sent to cart", {
+          className: " dark:bg-gray-900 dark:text-white",
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progressClassName: "custom-progress-bar",
         });
       }
     });
@@ -83,7 +96,7 @@ const SearchProducts = () => {
         <div className="w-full flex items-center relative">
           <Input
             placeholder=" "
-            className="w-full"
+            className={`w-full ${!keyword.length ? "caret-transparent" : ""}`}
             style={{
               fontSize: "1rem",
               textAlign: "center",
@@ -176,22 +189,29 @@ const SearchProducts = () => {
           )}
         </div>
       </div>
-      {!searchResult.length ? (
+      {!keyword ? (
         <h1 className="text-5xl font-extrabold text-center">
-          No Products Found
+          Search For Products
         </h1>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {searchResult.length &&
-            searchResult.map((item) => (
-              <ShoppingProductTile
-                key={item._id}
-                product={item}
-                handleAddToCart={handleAddToCart}
-                handleGetProductDetails={handleGetProductDetails}
-              />
-            ))}
-        </div>
+        <>
+          {searchResult.length ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              {searchResult.map((item) => (
+                <ShoppingProductTile
+                  key={item._id}
+                  product={item}
+                  handleAddToCart={handleAddToCart}
+                  handleGetProductDetails={handleGetProductDetails}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-5xl font-extrabold text-center">
+              No Products Found
+            </div>
+          )}
+        </>
       )}
       <ProductDetailsDialog
         open={openDetailsDialog}

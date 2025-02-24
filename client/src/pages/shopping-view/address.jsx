@@ -1,7 +1,7 @@
 import CommonForm from "@/components/common/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { addressFormControls } from "@/config";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "react-toastify";
 import {
   addNewAddress,
   deleteAddress,
@@ -38,9 +38,15 @@ const Address = ({ setCurrentSelectedAddress, numberOfCols }) => {
     e.preventDefault();
 
     if (addressList.length >= 3 && currentEditedId === null) {
-      toast({
-        title: "You reach the maximum number of addresses",
-        variant: "destructive",
+      toast.error("You reach the maximum number of addresses", {
+        className: " dark:bg-gray-900 dark:text-white",
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progressClassName: "custom-progress-bar",
       });
 
       return;
@@ -50,9 +56,15 @@ const Address = ({ setCurrentSelectedAddress, numberOfCols }) => {
       formData.phone.toString().length < 8 ||
       formData.phone.toString().length > 8
     ) {
-      toast({
-        title: "Phone number must be exactly 8 digits ",
-        variant: "destructive",
+      toast.error("Phone number must be exactly 8 digits", {
+        className: " dark:bg-gray-900 dark:text-white",
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progressClassName: "custom-progress-bar",
       });
       setIsValid(false);
       return;
@@ -62,9 +74,15 @@ const Address = ({ setCurrentSelectedAddress, numberOfCols }) => {
       formData.zipcode.toString().length < 4 ||
       formData.zipcode.toString().length > 4
     ) {
-      toast({
-        title: "Zipcode must be exactly 4 digits ",
-        variant: "destructive",
+      toast.error("Zipcode must be exactly 4 digits", {
+        className: " dark:bg-gray-900 dark:text-white",
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progressClassName: "custom-progress-bar",
       });
       setIsValid(false);
       return;
@@ -79,9 +97,15 @@ const Address = ({ setCurrentSelectedAddress, numberOfCols }) => {
           })
         ).then((data) => {
           if (data?.payload?.success) {
-            toast({
-              title: data?.payload?.message,
-              className: "bg-green-500 ",
+            toast.success(data?.payload?.message, {
+              className: " dark:bg-gray-900 dark:text-white",
+              position: "bottom-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progressClassName: "custom-progress-bar",
             });
 
             setFormData(initialFormData);
@@ -95,17 +119,18 @@ const Address = ({ setCurrentSelectedAddress, numberOfCols }) => {
           })
         ).then((data) => {
           console.log(data);
-          if (!data?.payload?.data) {
-            toast({
-              title: data.payload,
-              variant: "destructive",
+          if (data?.payload?.success) {
+            toast.success(data?.payload?.message, {
+              className: " dark:bg-gray-900 dark:text-white",
+              position: "bottom-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progressClassName: "custom-progress-bar",
             });
-          } else {
-            toast({
-              title: data?.payload?.message,
-              className: "bg-green-500 ",
-            }),
-              setFormData(initialFormData);
+            setFormData(initialFormData);
           }
         });
   };
@@ -123,9 +148,15 @@ const Address = ({ setCurrentSelectedAddress, numberOfCols }) => {
       deleteAddress({ userId: user?.id, addressId: getCurrentAddress._id })
     ).then((data) => {
       if (data?.payload?.success) {
-        toast({
-          title: data?.payload?.message,
-          className: "bg-green-500",
+        toast.success(data?.payload?.message, {
+          className: " dark:bg-gray-900 dark:text-white",
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progressClassName: "custom-progress-bar",
         });
       }
     });
@@ -150,8 +181,8 @@ const Address = ({ setCurrentSelectedAddress, numberOfCols }) => {
   return (
     <Card>
       <div
-        className={`mb-5 p-3 grid grid-cols-1 sm:grid-cols-${
-          numberOfCols || 3
+        className={`mb-5 p-3 grid grid-cols-1 ${
+          numberOfCols ? `sm:grid-cols-${numberOfCols}` : "sm:grid-cols-3"
         } gap-2`}
       >
         {addressList && addressList.length > 0

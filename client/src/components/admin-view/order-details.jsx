@@ -13,7 +13,7 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Badge } from "../ui/badge";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getAllOrdersForAdmin,
   getOrderDetailsForAdmin,
@@ -30,6 +30,8 @@ const initialFormData = {
 const AdminOrdersDetailsView = ({ orderDetails }) => {
   const [formData, setFormData] = useState(initialFormData);
   const [isOpenOrderDetails, setIsOpenOrderDetails] = useState(false);
+
+  const { user } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 
@@ -56,7 +58,7 @@ const AdminOrdersDetailsView = ({ orderDetails }) => {
   };
 
   return (
-    <DialogContent className="sm:max-w-[600px]">
+    <DialogContent className="sm:max-w-[600px] overflow-y-auto h-screen">
       <VisuallyHidden>
         <DialogTitle>Order Details</DialogTitle>
       </VisuallyHidden>
@@ -133,15 +135,20 @@ const AdminOrdersDetailsView = ({ orderDetails }) => {
             <CollapsibleContent className="CollapsibleContent transition-all duration-300 ease-in-out overflow-hidden data-[state=open]:animate-collapsible-open data-[state=closed]:animate-collapsible-closed">
               <ul className="grid gap-3">
                 {orderDetails?.cartItems.map((item) => (
-                  <li key={item._id} className="flex justify-between">
+                  <li
+                    key={item._id}
+                    className="flex justify-between border-b pb-4 items-center"
+                  >
                     <span>{item.title}</span>
-                    <span>
-                      <span className="font-extrabold">Price:</span> $
-                      {item.price}
-                      <span className="ml-2 font-extrabold">
-                        Quantity:
-                      </span>{" "}
-                      {item.quantity}
+                    <span className="flex flex-col items-start ">
+                      <span>
+                        <span className="font-bold">Price: </span>
+                        <span>${item.price}</span>
+                      </span>
+                      <span>
+                        <span className=" font-bold">Quantity: </span>
+                        <span>{item.quantity}</span>
+                      </span>
                     </span>
                   </li>
                 ))}
@@ -154,7 +161,7 @@ const AdminOrdersDetailsView = ({ orderDetails }) => {
           <div className="grid gap-2">
             <div className="font-extrabold">Shipping Info</div>
             <div className="grid gap-0.5 text-muted-foreground">
-              <span>{orderDetails?.addressInfo.userName}</span>
+              <span>{user?.userName}</span>
               <span>{orderDetails?.addressInfo.address}</span>
               <span>{orderDetails?.addressInfo.city}</span>
               <span>{orderDetails?.addressInfo.zipcode}</span>
@@ -207,7 +214,6 @@ AdminOrdersDetailsView.propTypes = {
       })
     ),
     addressInfo: PropTypes.shape({
-      userName: PropTypes.string,
       address: PropTypes.string,
       city: PropTypes.string,
       zipcode: PropTypes.string,

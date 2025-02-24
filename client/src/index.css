@@ -101,12 +101,13 @@
 
 * {
   --sb-track-color: #020917;
-  --sb-thumb-color: #d5c8c8;
+  --sb-thumb-color: #111827;
   --sb-size: 7px;
 }
 
 *::-webkit-scrollbar {
   width: var(--sb-size);
+  height: var(--sb-size);
 }
 
 *::-webkit-scrollbar-track {
@@ -123,4 +124,13 @@
   * {
     scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
   }
+}
+
+.custom-progress-bar {
+  background: linear-gradient(to right, #28a745, #0f0);
+  height: 5px;
+}
+
+.dark .Toastify__close-button {
+  color: #fff;
 }

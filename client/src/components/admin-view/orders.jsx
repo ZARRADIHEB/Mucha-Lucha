@@ -95,7 +95,10 @@ const AdminOrdersView = () => {
                 dispatch(resetOrderDetails());
               }}
             >
-              <AdminOrdersDetailsView orderDetails={orderDetails} />
+              <AdminOrdersDetailsView
+                orderDetails={orderDetails}
+                openDetailsDialog={openDetailsDialog}
+              />
             </Dialog>
 
             {ordersList.length === 0 && (

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "react-toastify";
 import { deleteCartItems, updateCartItems } from "@/store/shop/cart-slice";
 import { Minus, Plus, Trash } from "lucide-react";
 import PropTypes from "prop-types";
@@ -32,9 +32,15 @@ const UserCartItemsContent = ({ cartItem }) => {
             getCartItems[indexOfCurrentItem]?.quantity || 0;
 
           if (quantityInOrder + 1 > getTotalStock) {
-            toast({
-              title: `Only ${getTotalStock} items left in stock`,
-              variant: "destructive",
+            toast.error(`Only ${getTotalStock} items left in stock`, {
+              className: " dark:bg-gray-900 dark:text-white",
+              position: "bottom-right",
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progressClassName: "custom-progress-bar",
             });
             return;
           }
@@ -51,27 +57,13 @@ const UserCartItemsContent = ({ cartItem }) => {
             ? getCartItem.quantity + 1
             : getCartItem.quantity - 1,
       })
-    ).then((data) => {
-      if (data?.payload?.success) {
-        toast({
-          title: "Cart item updated successfully",
-          className: "bg-green-500",
-        });
-      }
-    });
+    );
   };
 
   const handleCartItemDelete = (getCartItem) => {
     dispatch(
       deleteCartItems({ userId: user.id, productId: getCartItem.productId })
-    ).then((data) => {
-      data?.payload?.success
-        ? toast({
-            title: "Cart item deleted successfully",
-            className: "bg-green-500",
-          })
-        : null;
-    });
+    );
   };
   return (
     <div className="flex items-center space-x-4">

@@ -1,6 +1,7 @@
 import express from "express";
 import {
   authMiddleware,
+  getAllUsers,
   login,
   logout,
   register,
@@ -20,5 +21,7 @@ router.get("/check-auth", authMiddleware, (req, res) => {
     user,
   });
 });
+
+router.get("/allUsers", getAllUsers);
 
 export default router;

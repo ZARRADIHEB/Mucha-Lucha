@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Separator } from "../ui/separator";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
-import { toast } from "@/hooks/use-toast";
+
 import { setProductDetails } from "@/store/shop/products-slice";
 import { Input } from "../ui/input";
 import { Avatar, AvatarFallback } from "../ui/avatar";
@@ -17,6 +17,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
+import { toast } from "react-toastify";
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
   const [reviewMsg, setReviewMsg] = useState("");
@@ -40,10 +41,17 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
         const quantityInOrder = getCartItems[indexOfCurrentItem]?.quantity || 0;
 
         if (quantityInOrder + 1 > getTotalStock) {
-          toast({
-            title: `Only ${getTotalStock} items left in stock`,
-            variant: "destructive",
+          toast.error(`Only ${getTotalStock} items left in stock`, {
+            className: " dark:bg-gray-900 dark:text-white",
+            position: "bottom-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progressClassName: "custom-progress-bar",
           });
+
           return;
         }
       }
@@ -58,9 +66,15 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(data.payload.data.userId));
-        toast({
-          title: "Product sent to cart",
-          className: "bg-green-500",
+        toast.success("Product sent to cart", {
+          className: " dark:bg-gray-900 dark:text-white",
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progressClassName: "custom-progress-bar",
         });
       }
     });
@@ -92,14 +106,27 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
         dispatch(getReviews(productDetails?._id));
         setRating(0);
         setReviewMsg("");
-        toast({
-          title: "Review added successfully",
-          className: "bg-green-500",
+
+        toast.success("Review added successfully", {
+          className: " dark:bg-gray-900 dark:text-white",
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progressClassName: "custom-progress-bar",
         });
       } else {
-        toast({
-          title: data?.payload?.message,
-          variant: "destructive",
+        toast.error(data?.payload?.message, {
+          className: " dark:bg-gray-900 dark:text-white",
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progressClassName: "custom-progress-bar",
         });
       }
     });
@@ -140,13 +167,13 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
           <Collapsible
             open={isOpenOrderDetails}
             onOpenChange={setIsOpenOrderDetails}
-            className="my-4"
+            className="my-4 "
           >
             <CollapsibleTrigger asChild>
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-full transition-all duration-300 ease-in-out"
+                className="w-full transition-all duration-300 ease-in-out bg-slate-900"
               >
                 <span className="text-muted-foreground">
                   {isOpenOrderDetails ? "Hide Description" : "View Description"}
@@ -212,7 +239,9 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
                 reviews.map((review, index) => (
                   <div key={index} className="flex gap-4">
                     <Avatar className="size-8 border sm:size-10">
-                      <AvatarFallback>{review.userName[0]}</AvatarFallback>
+                      <AvatarFallback>
+                        {review.userName[0].toUpperCase()}
+                      </AvatarFallback>
                     </Avatar>
                     <div className="grid gap-1">
                       <div className="flex items-center gap-2">
@@ -222,7 +251,8 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails, user }) => {
                         <StarRatingComponent rating={review.rating} />
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        {review.reviewMessage}
+                        {review.reviewMessage.charAt(0).toUpperCase() +
+                          review.reviewMessage.slice(1)}
                       </p>
                     </div>
                   </div>

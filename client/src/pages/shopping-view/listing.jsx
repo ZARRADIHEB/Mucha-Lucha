@@ -10,7 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { sortOptions } from "@/config";
-import { useToast } from "@/hooks/use-toast";
 import { addToCart, fetchCartItems } from "@/store/shop/cart-slice";
 import {
   fetchAllFilteredProducts,
@@ -20,6 +19,7 @@ import { ArrowUpDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const createSearchParamsHelper = (filterParams) => {
   const queryParams = [];
@@ -44,7 +44,6 @@ const ShoppingListing = () => {
   const [sort, setSort] = useState(null);
   const [searchParam, setSearchParams] = useSearchParams();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
-  const { toast } = useToast();
   const categorySearchParam = searchParam.get("category");
 
   const handleSort = (value) => {
@@ -89,9 +88,15 @@ const ShoppingListing = () => {
         const quantityInOrder = getCartItems[indexOfCurrentItem]?.quantity || 0;
 
         if (quantityInOrder + 1 > getTotalStock) {
-          toast({
-            title: `Only ${getTotalStock} items left in stock`,
-            variant: "destructive",
+          toast.error(`Only ${getTotalStock} items left in stock`, {
+            className: " dark:bg-gray-900 dark:text-white",
+            position: "bottom-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progressClassName: "custom-progress-bar",
           });
           return;
         }
@@ -106,9 +111,16 @@ const ShoppingListing = () => {
     ).then((data) => {
       if (data?.payload?.success) {
         dispatch(fetchCartItems(data.payload.data.userId));
-        toast({
-          title: "Product sent to cart",
-          className: "bg-green-500",
+
+        toast.success("Product sent to cart", {
+          className: " dark:bg-gray-900 dark:text-white",
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progressClassName: "custom-progress-bar",
         });
       }
     });

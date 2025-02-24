@@ -27,7 +27,7 @@ const ShoppingOrderDetailsView = ({ orderDetails, openDetailsDialog }) => {
   }, [openDetailsDialog]);
 
   return (
-    <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+    <DialogContent className="sm:max-w-[600px] h-screen overflow-y-auto">
       <VisuallyHidden>
         <DialogTitle>Order Details</DialogTitle>
       </VisuallyHidden>
@@ -106,16 +106,17 @@ const ShoppingOrderDetailsView = ({ orderDetails, openDetailsDialog }) => {
                 {orderDetails?.cartItems.map((item) => (
                   <li
                     key={item._id}
-                    className="flex justify-between border-b pb-3 items-center"
+                    className="flex justify-between border-b pb-4 items-center"
                   >
                     <span>{item.title}</span>
-                    <span className="flex items-center gap-2 flex-col">
-                      <span className="font-extrabold ">
-                        Price: ${item.price}
+                    <span className="flex flex-col items-start ">
+                      <span>
+                        <span className="font-bold">Price: </span>
+                        <span>${item.price}</span>
                       </span>
-
-                      <span className="ml-2 font-extrabold ">
-                        Quantity: {item.quantity}
+                      <span>
+                        <span className=" font-bold">Quantity: </span>
+                        <span>{item.quantity}</span>
                       </span>
                     </span>
                   </li>
