@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { Badge } from "../ui/badge";
 import { DialogContent, DialogTitle } from "../ui/dialog";
@@ -17,7 +16,6 @@ import { useEffect, useState } from "react";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 const ShoppingOrderDetailsView = ({ orderDetails, openDetailsDialog }) => {
-  const { user } = useSelector((state) => state.auth);
   const [isOpenOrderDescription, setIsOpenOrderDescription] = useState(false);
 
   useEffect(() => {
@@ -27,11 +25,11 @@ const ShoppingOrderDetailsView = ({ orderDetails, openDetailsDialog }) => {
   }, [openDetailsDialog]);
 
   return (
-    <DialogContent className="sm:max-w-[600px] h-screen overflow-y-auto">
+    <DialogContent className="sm:max-w-[600px] h-[85vh] lg:h-[90vh] overflow-y-auto">
       <VisuallyHidden>
         <DialogTitle>Order Details</DialogTitle>
       </VisuallyHidden>
-      <div className="grid gap-6">
+      <div className="grid gap-4">
         <div className="grid gap-2">
           <div className="mt-6 flex justify-between items-center">
             <p className="font-extrabold">Order ID</p>
@@ -103,10 +101,15 @@ const ShoppingOrderDetailsView = ({ orderDetails, openDetailsDialog }) => {
             </CollapsibleTrigger>
             <CollapsibleContent className="CollapsibleContent transition-all duration-300 ease-in-out overflow-hidden data-[state=open]:animate-collapsible-open data-[state=closed]:animate-collapsible-closed">
               <ul className="grid gap-3">
-                {orderDetails?.cartItems.map((item) => (
+                {orderDetails?.cartItems.map((item, index) => (
                   <li
                     key={item._id}
-                    className="flex justify-between border-b pb-4 items-center"
+                    className={`flex justify-between ${
+                      orderDetails.cartItems.length === 1 ||
+                      index + 1 === orderDetails.cartItems.length
+                        ? ""
+                        : "border-b pb-4"
+                    }  items-center`}
                   >
                     <span>{item.title}</span>
                     <span className="flex flex-col items-start ">
@@ -130,7 +133,7 @@ const ShoppingOrderDetailsView = ({ orderDetails, openDetailsDialog }) => {
           <div className="grid gap-2">
             <div className="font-extrabold">Shipping Info</div>
             <div className="grid gap-0.5 text-muted-foreground">
-              <span>{user?.userName}</span>
+              <span>{orderDetails?.addressInfo?.userName}</span>
               <span>{orderDetails?.addressInfo.address}</span>
               <span>{orderDetails?.addressInfo.city}</span>
               <span>{orderDetails?.addressInfo.zipcode}</span>
@@ -151,6 +154,7 @@ ShoppingOrderDetailsView.propTypes = {
     paymentMethod: PropTypes.string,
     paymentStatus: PropTypes.string,
     orderStatus: PropTypes.string,
+    length: PropTypes.number,
     cartItems: PropTypes.arrayOf(
       PropTypes.shape({
         _id: PropTypes.string,
@@ -160,6 +164,7 @@ ShoppingOrderDetailsView.propTypes = {
       })
     ),
     addressInfo: PropTypes.shape({
+      userName: PropTypes.string,
       address: PropTypes.string,
       city: PropTypes.string,
       zipcode: PropTypes.string,

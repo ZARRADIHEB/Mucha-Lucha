@@ -2,8 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import img from "../../assets/account.jpg";
 import Address from "./address";
 import UserCartItemsContent from "./cart-items-content";
-// import { Button } from "@/components/ui/button";
-// import { FaPaypal } from "react-icons/fa";
 import { useState } from "react";
 import { createNewOrder } from "@/store/shop/order-slice";
 import { toast } from "react-toastify";
@@ -14,7 +12,6 @@ const ShoppingCheckout = () => {
   const { user } = useSelector((state) => state.auth);
   const { approvalUrl } = useSelector((state) => state.shopOrder);
   const [currentSelectedAddress, setCurrentSelectedAddress] = useState(null);
-  const [isPaymentStarted, setIsPaymentStarted] = useState(false);
   const dispatch = useDispatch();
 
   const totalCartAmount =
@@ -85,26 +82,10 @@ const ShoppingCheckout = () => {
       payerId: "",
     };
 
-    dispatch(createNewOrder(orderData)).then((data) => {
-      if (data.payload?.success) {
-        toast.success("Order created successfully", {
-          className: " dark:bg-gray-900 dark:text-white",
-          position: "bottom-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progressClassName: "custom-progress-bar",
-        });
-        setIsPaymentStarted(true);
-      } else {
-        setIsPaymentStarted(false);
-      }
-    });
+    dispatch(createNewOrder(orderData));
   };
 
-  if (isPaymentStarted && approvalUrl) {
+  if (approvalUrl) {
     window.location.href = approvalUrl;
   }
 

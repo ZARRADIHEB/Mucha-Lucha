@@ -22,6 +22,7 @@ import Loader from "./components/common/Loading";
 import PaypalReturnPage from "./pages/shopping-view/paypal-return";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
+import LandingPage from "./pages/auth/landing-page";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -38,7 +39,7 @@ function App() {
   return (
     <div className="flex flex-col overflow-hidden bg-white dark:bg-gray-900 dark:text-white min-h-screen">
       <Routes>
-        <Route path="/" element={"Mucha Lucha home page"}></Route>
+        <Route path="/" element={<LandingPage />} />
         {/* Auth Layout */}
         <Route
           path="/auth"
@@ -49,6 +50,7 @@ function App() {
           }
         >
           <Route path="login" element={<AuthLogin />} />
+          ---
           <Route path="register" element={<AuthRegister />} />
         </Route>
 

@@ -1,4 +1,4 @@
-import bannerOne from "../../assets/bannerOne.jpg";
+import bannerOne from "../../assets/bannerOne.avif";
 import bannerTwo from "../../assets/bannerTwo.jpg";
 import bannerThree from "../../assets/bannerThree.jpg";
 import { Button } from "@/components/ui/button";

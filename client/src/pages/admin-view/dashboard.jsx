@@ -194,12 +194,15 @@ export default function Dashboard() {
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#fff",
+                    backgroundColor: "#000", // Black background for dark mode
                     border: "none",
                     borderRadius: "8px",
                     boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
                     fontSize: 14,
                   }}
+                  labelStyle={{ color: "#fff" }} // White label text
+                  itemStyle={{ color: "#fff" }} // White item text
+                  formatter={(value) => `$${value}`} // Prepend a dollar sign to revenue
                 />
                 <Line
                   type="monotone"
@@ -289,8 +292,8 @@ export default function Dashboard() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {allReviews.slice(-4).map((review) => (
-                    <TableRow key={review.product}>
+                  {allReviews.slice(-3).map((review) => (
+                    <TableRow key={review._id}>
                       <TableCell className="text-xs sm:text-sm">
                         {review.userName}
                       </TableCell>
