@@ -1,4 +1,8 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSlice,
+  isRejectedWithValue,
+} from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
@@ -35,7 +39,9 @@ export const loginUser = createAsyncThunk("/auth/login", async (formData) => {
     );
     return response.data;
   } catch (error) {
-    return error.response?.data || { message: "An error occurred" };
+    return isRejectedWithValue(
+      error.response?.data || { message: "An error occurred" }
+    );
   }
 });
 
