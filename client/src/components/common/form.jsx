@@ -10,6 +10,9 @@ import {
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import PropTypes from "prop-types";
+import { useState } from "react";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 
 const types = {
   INPUT: "input",
@@ -26,6 +29,21 @@ const CommonForm = ({
   buttonText,
   isBtnDisabled,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const icons = {
+    show: FaEye,
+    hide: FaEyeSlash,
+  };
+
+  const handleShowPassword = () => {
+    setShowPassword((prev) => !prev);
+  };
+  const handleShowConfirmPassword = () => {
+    setShowConfirmPassword((prev) => !prev);
+  };
+
   const renderInputsByComponentType = (getControlItem) => {
     let element = null;
     const value = formdata[getControlItem.name] || "";
@@ -36,7 +54,12 @@ const CommonForm = ({
             name={getControlItem.name}
             placeholder={getControlItem.placeholder}
             id={getControlItem.name}
-            type={getControlItem.type}
+            type={
+              (getControlItem.id === "password" && showPassword) ||
+              (getControlItem.id === "confirmPassword" && showConfirmPassword)
+                ? "text"
+                : getControlItem.type
+            }
             value={value}
             onChange={(e) =>
               setFormData({
@@ -118,10 +141,30 @@ const CommonForm = ({
   return (
     <form onSubmit={onSubmit}>
       <div className="flex flex-col gap-3">
-        {formControls.map((controlItem) => (
-          <div className="grid w-full gap-1.5" key={controlItem.name}>
+        {formControls?.map((controlItem) => (
+          <div className={`grid w-full gap-1.5 `} key={controlItem.name}>
             <Label className="mb-1 font-extrabold">{controlItem.label}</Label>
-            {renderInputsByComponentType(controlItem)}
+            <div
+              className={`${controlItem.type === "password" ? "relative" : ""}`}
+            >
+              {renderInputsByComponentType(controlItem)}
+              {controlItem.id === "password" && (
+                <span
+                  onClick={handleShowPassword}
+                  className="absolute top-1/2 right-5 translate-y-[-50%] cursor-pointer p-2"
+                >
+                  {showPassword ? <icons.hide /> : <icons.show />}
+                </span>
+              )}{" "}
+              {controlItem.id === "confirmPassword" && (
+                <span
+                  onClick={handleShowConfirmPassword}
+                  className="absolute top-1/2 right-5 translate-y-[-50%] cursor-pointer p-2"
+                >
+                  {showConfirmPassword ? <icons.hide /> : <icons.show />}
+                </span>
+              )}
+            </div>
           </div>
         ))}
       </div>

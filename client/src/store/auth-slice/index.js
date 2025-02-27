@@ -1,8 +1,4 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  isRejectedWithValue,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
@@ -39,9 +35,7 @@ export const loginUser = createAsyncThunk("/auth/login", async (formData) => {
     );
     return response.data;
   } catch (error) {
-    return isRejectedWithValue(
-      error.response?.data || { message: "An error occurred" }
-    );
+    return error.response?.data || { message: "An error occurred" };
   }
 });
 
@@ -61,12 +55,60 @@ export const logoutUser = createAsyncThunk("/auth/logout", async () => {
   }
 });
 
+// Forget password
+export const forgetPassword = createAsyncThunk(
+  "/auth/forget-password",
+  async (email) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/forget-password`,
+        email
+      );
+      return response.data;
+    } catch (error) {
+      return error.response?.data || { message: "An error occurred" };
+    }
+  }
+);
+
+// OTP verification
+export const otpVerification = createAsyncThunk(
+  "/auth/otp-verify",
+  async ({ otp, email }) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/otp-verify`,
+        { otp, email }
+      );
+      return response.data;
+    } catch (error) {
+      return error.response?.data || { message: "An error occurred" };
+    }
+  }
+);
+
+// Reset password
+export const resetPassword = createAsyncThunk(
+  "/auth/reset-password",
+  async (formData) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/reset-password`,
+        formData
+      );
+      return response.data;
+    } catch (error) {
+      return error.response?.data || { message: "An error occurred" };
+    }
+  }
+);
+
 // Check auth
 export const checkAuth = createAsyncThunk("/auth/check-auth", async () => {
-const{pathname}=window.location
-if(pathname==="/"){
-return {success:false}
-}
+  const { pathname } = window.location;
+  if (pathname === "/") {
+    return { success: false };
+  }
   try {
     const response = await axios.get(
       `${import.meta.env.VITE_API_URL}/api/auth/check-auth`,
@@ -161,6 +203,36 @@ const authSlice = createSlice({
       .addCase(getAllUsers.rejected, (state) => {
         state.isLoading = false;
         state.allUsers = [];
+      })
+
+      .addCase(forgetPassword.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(forgetPassword.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(forgetPassword.rejected, (state) => {
+        state.isLoading = false;
+      })
+
+      .addCase(otpVerification.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(otpVerification.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(otpVerification.rejected, (state) => {
+        state.isLoading = false;
+      })
+
+      .addCase(resetPassword.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(resetPassword.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(resetPassword.rejected, (state) => {
+        state.isLoading = false;
       });
   },
 });

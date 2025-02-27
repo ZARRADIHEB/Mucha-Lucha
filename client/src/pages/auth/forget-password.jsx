@@ -1,27 +1,25 @@
 import CommonForm from "@/components/common/form";
-import { registerFormControls } from "@/config";
-import { registerUser } from "@/store/auth-slice";
+import { forgetPasswordFormControls } from "@/config";
+import { forgetPassword } from "@/store/auth-slice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const initialState = {
-  userName: "",
   email: "",
-  password: "",
 };
 
-const AuthRegister = () => {
+const ForgetPassword = () => {
   const [formData, setFormData] = useState(initialState);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const onSubmit = (e) => {
     e.preventDefault();
-
-    dispatch(registerUser(formData)).then((data) => {
-      if (data.payload?.success) {
+    dispatch(forgetPassword(formData)).then((data) => {
+      if (data?.payload?.success) {
         toast.success(data?.payload?.message, {
           className: " dark:bg-gray-900 dark:text-white",
           position: "bottom-right",
@@ -32,7 +30,8 @@ const AuthRegister = () => {
           draggable: true,
           progressClassName: "custom-progress-bar",
         });
-        navigate("/auth/login");
+
+        navigate("/auth/otp-verify", { state: { email: formData.email } });
       } else {
         toast.error(data?.payload?.message || "An error has occurred", {
           className: " dark:bg-gray-900 dark:text-white",
@@ -50,29 +49,20 @@ const AuthRegister = () => {
 
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Create new account
-        </h1>
-        <p className="mt-2">
-          Already have an account
-          <Link
-            className="font-medium text-primary ml-2 hover:underline"
-            to="/auth/login"
-          >
-            Login
-          </Link>
-        </p>
-      </div>
       <CommonForm
-        formControls={registerFormControls}
-        buttonText="Sign Up"
+        formControls={forgetPasswordFormControls}
+        buttonText="Send OTP"
         formdata={formData}
         setFormData={setFormData}
         onSubmit={onSubmit}
+        isBtnDisabled={
+          !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
+            formData.email
+          )
+        }
       />
     </div>
   );
 };
 
-export default AuthRegister;
+export default ForgetPassword;

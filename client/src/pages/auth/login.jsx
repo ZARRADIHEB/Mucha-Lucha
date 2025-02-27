@@ -68,6 +68,9 @@ const AuthLogin = () => {
         setFormData={setFormData}
         onSubmit={onSubmit}
       />
+      <div className="flex justify-end">
+        <Link to="/auth/forget-password">Forget password?</Link>
+      </div>
     </div>
   );
 };

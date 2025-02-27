@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import UserModel from "../../models/User.js";
 import dotenv from "dotenv";
+import sendEmail from "../../helpers/sendEmail.js";
 dotenv.config();
 
 //register
@@ -141,7 +142,7 @@ const login = async (req, res) => {
 const logout = (req, res) => {
   try {
     res.clearCookie("token", {
-     httpOnly: true,
+      httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
     });
@@ -152,6 +153,151 @@ const logout = (req, res) => {
     });
   } catch (error) {
     console.error("Logout error:", error.message || error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
+
+//forget password
+const forgetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        message: "Please provide your email",
+        success: false,
+      });
+    }
+
+    const user = await UserModel.findOne({
+      email,
+    });
+    if (!user) {
+      return res.status(400).json({
+        message: "Email not registered",
+        success: false,
+      });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000);
+    const otpExpiry = Date.now() + 10 * 60 * 1000;
+
+    await user.updateOne({
+      otp,
+      otpExpiry,
+    });
+
+    try {
+      await sendEmail(email, "Your OTP From Mucha Lucha", otp);
+    } catch (emailError) {
+      console.error("Email sending error:", emailError.message || emailError);
+      return res.status(500).json({
+        message: "Failed to send OTP email. Please try again later.",
+        success: false,
+      });
+    }
+
+    res.status(200).json({
+      message: "Reset password link sent to your email",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Forget password error:", error.message || error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
+
+//otp verification
+const otpVerification = async (req, res) => {
+  try {
+    const { otp, email } = req.body;
+
+    if (!otp) {
+      return res.status(400).json({
+        message: "Please provide your OTP",
+        success: false,
+      });
+    }
+
+    const user = await UserModel.findOne({
+      email,
+    });
+
+    if (!user.otpExpiry || user.otpExpiry < Date.now()) {
+      return res.status(400).json({
+        message: "OTP expired",
+        success: false,
+      });
+    }
+
+    if (user.otp !== otp) {
+      return res.status(400).json({
+        message: "Invalid OTP",
+        success: false,
+      });
+    }
+
+    await user.updateOne({ otp: null, otpExpiry: null });
+
+    res.status(200).json({
+      message: "OTP verified",
+      success: true,
+    });
+  } catch (error) {
+    console.error("OTP verification error:", error.message || error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
+
+//reset password
+const resetPassword = async (req, res) => {
+  try {
+    const { email, password, confirmPassword } = req.body;
+
+    if (!password || !confirmPassword) {
+      return res.status(400).json({
+        message: "Please fill all fields",
+        success: false,
+      });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        message: "Passwords do not match",
+        success: false,
+      });
+    }
+
+    if (password.length < 8 || confirmPassword.length < 8) {
+      return res.status(422).json({
+        message: "Password must be at least 8 characters long",
+        success: false,
+      });
+    }
+    const user = await UserModel.findOne({
+      email,
+    });
+
+    const salt = await bcrypt.genSalt(12);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    await user.updateOne({ password: hashedPassword });
+
+    res.status(200).json({
+      message: "Password reset successfully",
+      success: true,
+    });
+  } catch (error) {
+    console.error("Reset password error:", error.message || error);
     return res.status(500).json({
       message: "Internal server error",
       success: false,
@@ -218,4 +364,13 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-export { register, login, logout, authMiddleware, getAllUsers };
+export {
+  register,
+  login,
+  logout,
+  authMiddleware,
+  getAllUsers,
+  forgetPassword,
+  otpVerification,
+  resetPassword,
+};

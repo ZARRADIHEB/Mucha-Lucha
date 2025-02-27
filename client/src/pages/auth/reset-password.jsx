@@ -1,27 +1,36 @@
 import CommonForm from "@/components/common/form";
-import { registerFormControls } from "@/config";
-import { registerUser } from "@/store/auth-slice";
+import { resetPasswordFormControls } from "@/config";
+import { resetPassword } from "@/store/auth-slice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const initialState = {
-  userName: "",
-  email: "",
   password: "",
+  confirmPassword: "",
 };
 
-const AuthRegister = () => {
+const ResetPassword = () => {
   const [formData, setFormData] = useState(initialState);
+
   const dispatch = useDispatch();
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const email = location?.state?.email;
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(registerUser(formData)).then((data) => {
-      if (data.payload?.success) {
+    dispatch(
+      resetPassword({
+        email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+      })
+    ).then((data) => {
+      if (data?.payload?.success) {
         toast.success(data?.payload?.message, {
           className: " dark:bg-gray-900 dark:text-white",
           position: "bottom-right",
@@ -32,6 +41,7 @@ const AuthRegister = () => {
           draggable: true,
           progressClassName: "custom-progress-bar",
         });
+
         navigate("/auth/login");
       } else {
         toast.error(data?.payload?.message || "An error has occurred", {
@@ -50,29 +60,18 @@ const AuthRegister = () => {
 
   return (
     <div className="mx-auto w-full max-w-md space-y-6">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">
-          Create new account
-        </h1>
-        <p className="mt-2">
-          Already have an account
-          <Link
-            className="font-medium text-primary ml-2 hover:underline"
-            to="/auth/login"
-          >
-            Login
-          </Link>
-        </p>
-      </div>
       <CommonForm
-        formControls={registerFormControls}
-        buttonText="Sign Up"
+        formControls={resetPasswordFormControls}
+        buttonText=" Reset Password"
         formdata={formData}
         setFormData={setFormData}
         onSubmit={onSubmit}
+        isBtnDisabled={
+          formData.password.length < 8 || formData.confirmPassword.length < 8
+        }
       />
     </div>
   );
 };
 
-export default AuthRegister;
+export default ResetPassword;

@@ -23,6 +23,9 @@ import PaypalReturnPage from "./pages/shopping-view/paypal-return";
 import PaymentSuccessPage from "./pages/shopping-view/payment-success";
 import SearchProducts from "./pages/shopping-view/search";
 import LandingPage from "./pages/auth/landing-page";
+import ForgetPassword from "./pages/auth/forget-password";
+import OtpVerify from "./pages/auth/otp-verify";
+import ResetPassword from "./pages/auth/reset-password";
 
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
@@ -52,6 +55,9 @@ function App() {
           <Route path="login" element={<AuthLogin />} />
           ---
           <Route path="register" element={<AuthRegister />} />
+          <Route path="forget-password" element={<ForgetPassword />} />
+          <Route path="otp-verify" element={<OtpVerify />} />
+          <Route path="reset-password" element={<ResetPassword />} />
         </Route>
 
         {/* Admin Layout */}

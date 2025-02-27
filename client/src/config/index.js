@@ -16,6 +16,7 @@ export const registerFormControls = [
     type: "email",
   },
   {
+    id: "password",
     name: "password",
     label: "Password",
     placeholder: "Enter your password",
@@ -33,9 +34,49 @@ export const loginFormControls = [
     type: "email",
   },
   {
+    id: "password",
     name: "password",
     label: "Password",
     placeholder: "Enter your password",
+    componentType: "input",
+    type: "password",
+  },
+];
+
+export const forgetPasswordFormControls = [
+  {
+    name: "email",
+    label: "Email",
+    placeholder: "Enter your email",
+    componentType: "input",
+    type: "email",
+  },
+];
+
+export const optVerifyFormControls = [
+  {
+    name: "otp",
+    label: "OTP",
+    placeholder: "Enter OTP",
+    componentType: "input",
+    type: "number",
+  },
+];
+
+export const resetPasswordFormControls = [
+  {
+    id: "password",
+    name: "password",
+    label: "Password",
+    placeholder: "Enter your new password",
+    componentType: "input",
+    type: "password",
+  },
+  {
+    id: "confirmPassword",
+    name: "confirmPassword",
+    label: "Confirm Password",
+    placeholder: "Re-enter your new password",
     componentType: "input",
     type: "password",
   },
